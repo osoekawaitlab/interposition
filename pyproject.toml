@@ -22,6 +22,9 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = []
 
+[project.scripts]
+interposition = "interposition.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/osoekawaitlab/interposition"
 Repository = "https://github.com/osoekawaitlab/interposition"
@@ -70,7 +73,8 @@ ignore = [
 "tests/**/*.py" = [
     "S101",    # assert-used (pytest uses asserts)
 ]
-"tests/e2e/**/*.py" = [
+"e2e/**/*.py" = [
+    "S101",  # assert-used (E2E tests use asserts)
     "S607",  # start-process-with-partial-path
 ]
 
@@ -101,6 +105,7 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+mypy_path = "e2e/stubs"
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]
