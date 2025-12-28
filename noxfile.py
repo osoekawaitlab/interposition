@@ -45,7 +45,7 @@ def tests_all_versions(session: nox.Session) -> None:
 def mypy(session: nox.Session) -> None:
     """Run mypy type checking."""
     session.install("-e", ".", "--group=dev")
-    session.run("mypy", "src/", "tests/")
+    session.run("mypy", "src/", "tests/", "e2e/")
 
 
 @nox.session(python="3.10")
