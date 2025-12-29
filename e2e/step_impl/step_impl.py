@@ -1,45 +1,36 @@
-from getgauge.python import step, before_scenario, Messages
+"""Step implementations for Gauge tests."""
 
-vowels = ["a", "e", "i", "o", "u"]
+import shlex
+import subprocess
 
+from getgauge.python import data_store, step
 
-def number_of_vowels(word):
-    return len([elem for elem in list(word) if elem in vowels])
-
-
-# --------------------------
-# Gauge step implementations
-# --------------------------
+from interposition._version import __version__
 
 
-@step("The word <word> has <number> vowels.")
-def assert_no_of_vowels_in(word, number):
-    assert str(number) == str(number_of_vowels(word))
+@step("User types <interposition --version> in terminal")
+def user_types_in_terminal(arg1: str) -> None:
+    """Execute the interposition command with the given arguments."""
+    args = shlex.split(arg1)
+    if not args or args[0] != "interposition":
+        msg = f"Expected 'interposition' command, got: {arg1}"
+        raise ValueError(msg)
+
+    result = subprocess.run(  # noqa: S603
+        args,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    data_store.scenario["command_output"] = result.stdout.strip()
+    data_store.scenario["command_returncode"] = result.returncode
 
 
-@step("Vowels in English language are <vowels>.")
-def assert_default_vowels(given_vowels):
-    Messages.write_message("Given vowels are {0}".format(given_vowels))
-    assert given_vowels == "".join(vowels)
+@step("The output should coincide with interposition's version")
+def output_should_coincide_with_version() -> None:
+    """Verify that the command output matches the expected version."""
+    output = data_store.scenario.get("command_output", "")
+    returncode = data_store.scenario.get("command_returncode", 1)
 
-
-@step("Almost all words have vowels <table>")
-def assert_words_vowel_count(table):
-    actual = [
-        str(number_of_vowels(word))
-        for word in table.get_column_values_with_name("Word")
-    ]
-    expected = [
-        str(count) for count in table.get_column_values_with_name("Vowel Count")
-    ]
-    assert expected == actual
-
-
-# ---------------
-# Execution Hooks
-# ---------------
-
-
-@before_scenario()
-def before_scenario_hook():
-    assert "".join(vowels) == "aeiou"
+    assert returncode == 0, f"Command failed with return code {returncode}"
+    assert output == __version__, f"Expected version {__version__}, got {output}"
