@@ -4,74 +4,111 @@ Protocol-agnostic interaction interposition with lifecycle hooks for record, rep
 
 ## Overview
 
-Interposition is a Python library for replaying recorded interactions in a protocol-agnostic way. It provides in-memory cassettes that store request-response interactions and a broker that replays matching responses based on request fingerprints.
+Interposition is a Python library for replaying recorded interactions. Unlike VCRpy or other HTTP-specific tools, **Interposition does not automatically hook into network libraries**.
+
+Instead, it provides a **pure logic engine** for storage, matching, and replay. You write the adapter for your specific target (HTTP client, database driver, IoT message handler), and Interposition handles the rest.
 
 **Key Features:**
 
-- **Protocol-agnostic**: Works with any protocol (HTTP, gRPC, database calls, etc.)
+- **Protocol-agnostic**: Works with any protocol (HTTP, gRPC, SQL, Pub/Sub, etc.)
 - **Type-safe**: Full mypy strict mode support with Pydantic v2
 - **Immutable**: All data structures are frozen Pydantic models
 - **Serializable**: Built-in JSON/YAML serialization for cassette persistence
 - **Memory-efficient**: O(1) lookup with fingerprint indexing
 - **Streaming**: Generator-based response delivery
 
+## Architecture
+
+Interposition sits behind your application's data access layer. You provide the "Adapter" that captures live traffic or requests replay from the Broker.
+
+```text
++-------------+      +------------------+      +---------------+
+| Application | <--> | Your Adapter     | <--> | Interposition |
++-------------+      +------------------+      +---------------+
+                            |                          |
+                       (Traps calls)              (Manages)
+                                                       |
+                                                  [Cassette]
+```
+
 ## Installation
 
 ```bash
-# Development installation
-pip install -e .
+pip install interposition
 ```
 
-## Quick Start
+## Practical Integration (Pytest Recipe)
+
+The most common use case is using Interposition as a test fixture. Here is a production-ready recipe for `pytest`:
 
 ```python
-from interposition import (
-    Broker,
-    Cassette,
-    Interaction,
-    InteractionRequest,
-    ResponseChunk,
-)
+import pytest
+from interposition import Broker, Cassette, InteractionRequest
 
-# Create a request
+@pytest.fixture
+def cassette_broker():
+    # Load cassette from a JSON file (or create one programmatically)
+    with open("tests/fixtures/my_cassette.json", "rb") as f:
+        cassette = Cassette.model_validate_json(f.read())
+    return Broker(cassette)
+
+def test_user_service(cassette_broker, monkeypatch):
+    # 1. Create your adapter (mocking your actual client)
+    def mock_fetch(url):
+        request = InteractionRequest(
+            protocol="http",
+            action="GET",
+            target=url,
+            headers=(),
+            body=b"",
+        )
+        # Delegate to Interposition
+        chunks = list(cassette_broker.replay(request))
+        return chunks[0].data
+
+    # 2. Inject the adapter
+    monkeypatch.setattr("my_app.client.fetch", mock_fetch)
+
+    # 3. Run your test
+    from my_app import get_user_name
+    assert get_user_name(42) == "Alice"
+```
+
+## Protocol-Agnostic Examples
+
+Interposition shines where HTTP-only tools fail.
+
+### SQL Database Query
+
+```python
 request = InteractionRequest(
-    protocol="test-proto",
-    action="fetch",
-    target="resource-123",
-    headers=(("X-Custom-Header", "value"),),
-    body=b'{"key": "value"}',
+    protocol="postgres",
+    action="SELECT",
+    target="users_table",
+    headers=(),
+    body=b"SELECT id, name FROM users WHERE id = 42",
 )
-
-# Create response chunks
-chunks = (
-    ResponseChunk(data=b"response-part1", sequence=0),
-    ResponseChunk(data=b"response-part2", sequence=1),
-)
-
-# Create an interaction (recorded request-response pair)
-interaction = Interaction(
-    request=request,
-    fingerprint=request.fingerprint(),
-    response_chunks=chunks,
-)
-
-# Create a cassette with recorded interactions
-cassette = Cassette(interactions=(interaction,))
-
-# Create a broker for replay
-broker = Broker(cassette=cassette)
-
-# Replay the response for a matching request
-for chunk in broker.replay(request):
-    print(f"Chunk {chunk.sequence}: {chunk.data}")
-# Output:
-# Chunk 0: b'response-part1'
-# Chunk 1: b'response-part2'
+# Replay returns: b'[(42, "Alice")]'
 ```
 
-## Usage Examples
+### MQTT / PubSub Message
 
-### Basic Replay
+```python
+request = InteractionRequest(
+    protocol="mqtt",
+    action="subscribe",
+    target="sensors/temp/room1",
+    headers=(("qos", "1"),),
+    body=b"",
+)
+# Replay returns stream of messages: b'24.5', b'24.6', ...
+```
+
+## Usage Guide
+
+### Manual Construction (Quick Start)
+
+If you need to build interactions programmatically (e.g., for seeding tests):
 
 ```python
 from interposition import (
@@ -82,7 +119,7 @@ from interposition import (
     ResponseChunk,
 )
 
-# Record an interaction
+# 1. Define the Request
 request = InteractionRequest(
     protocol="api",
     action="query",
@@ -91,262 +128,81 @@ request = InteractionRequest(
     body=b"",
 )
 
-response = (
+# 2. Define the Response
+chunks = (
     ResponseChunk(data=b'{"id": 42, "name": "Alice"}', sequence=0),
 )
 
+# 3. Create Interaction & Cassette
 interaction = Interaction(
     request=request,
     fingerprint=request.fingerprint(),
-    response_chunks=response,
+    response_chunks=chunks,
 )
-
-# Create cassette and broker
 cassette = Cassette(interactions=(interaction,))
-broker = Broker(cassette=cassette)
 
-# Replay
-chunks = list(broker.replay(request))
-assert len(chunks) == 1
-assert chunks[0].data == b'{"id": 42, "name": "Alice"}'
+# 4. Replay
+broker = Broker(cassette=cassette)
+response = list(broker.replay(request))
 ```
 
-### Handling Missing Interactions
+### Persistence & Serialization
+
+Interposition models are Pydantic v2 models, making serialization trivial.
 
 ```python
-from interposition import Broker, InteractionNotFoundError, InteractionRequest
+# Save to JSON
+with open("cassette.json", "w") as f:
+    f.write(cassette.model_dump_json(indent=2))
 
-# Attempt to replay an unrecorded request
-different_request = InteractionRequest(
-    protocol="api",
-    action="query",
-    target="users/99",  # Different target
-    headers=(),
-    body=b"",
-)
+# Load from JSON
+with open("cassette.json") as f:
+    cassette = Cassette.model_validate_json(f.read())
+
+# Generate JSON Schema
+schema = Cassette.model_json_schema()
+```
+
+### Streaming Responses
+
+For large files or streaming protocols, responses are yielded lazily:
+
+```python
+# The broker returns a generator
+for chunk in broker.replay(request):
+    print(f"Received chunk: {len(chunk.data)} bytes")
+```
+
+### Error Handling
+
+If a matching interaction is not found, the broker raises `InteractionNotFoundError`:
+
+```python
+from interposition import InteractionNotFoundError
 
 try:
-    list(broker.replay(different_request))
+    broker.replay(unknown_request)
 except InteractionNotFoundError as e:
-    print(f"No matching interaction found for: {e.request.target}")
-    # Output: No matching interaction found for: users/99
+    print(f"Not recorded: {e.request.target}")
 ```
-
-### Multi-Chunk Streaming
-
-```python
-# Large response split into multiple chunks
-large_response = (
-    ResponseChunk(data=b"chunk-1" * 1000, sequence=0),
-    ResponseChunk(data=b"chunk-2" * 1000, sequence=1),
-    ResponseChunk(data=b"chunk-3" * 1000, sequence=2),
-)
-
-interaction = Interaction(
-    request=request,
-    fingerprint=request.fingerprint(),
-    response_chunks=large_response,
-)
-
-cassette = Cassette(interactions=(interaction,))
-broker = Broker(cassette=cassette)
-
-# Process chunks incrementally
-for chunk in broker.replay(request):
-    # Process each chunk as it arrives (streaming)
-    process_chunk(chunk.data)
-```
-
-### Multiple Interactions in Cassette
-
-```python
-# Create multiple interactions
-interactions = []
-
-for i in range(10):
-    req = InteractionRequest(
-        protocol="api",
-        action="fetch",
-        target=f"resource-{i}",
-        headers=(),
-        body=b"",
-    )
-    resp = (ResponseChunk(data=f"data-{i}".encode(), sequence=0),)
-    interaction = Interaction(
-        request=req,
-        fingerprint=req.fingerprint(),
-        response_chunks=resp,
-    )
-    interactions.append(interaction)
-
-# Create cassette with all interactions
-cassette = Cassette(interactions=tuple(interactions))
-broker = Broker(cassette=cassette)
-
-# Replay any recorded request (O(1) lookup)
-request_5 = InteractionRequest(
-    protocol="api",
-    action="fetch",
-    target="resource-5",
-    headers=(),
-    body=b"",
-)
-chunks = list(broker.replay(request_5))
-assert chunks[0].data == b"data-5"
-```
-
-### Request Fingerprinting
-
-```python
-# Requests with identical content produce identical fingerprints
-request1 = InteractionRequest(
-    protocol="api",
-    action="get",
-    target="users",
-    headers=(("Accept", "application/json"),),
-    body=b"",
-)
-
-request2 = InteractionRequest(
-    protocol="api",
-    action="get",
-    target="users",
-    headers=(("Accept", "application/json"),),
-    body=b"",
-)
-
-assert request1.fingerprint() == request2.fingerprint()
-
-# Header order doesn't matter (canonical ordering)
-request3 = InteractionRequest(
-    protocol="api",
-    action="get",
-    target="users",
-    headers=(("Accept", "application/json"), ("User-Agent", "test")),
-    body=b"",
-)
-
-request4 = InteractionRequest(
-    protocol="api",
-    action="get",
-    target="users",
-    headers=(("User-Agent", "test"), ("Accept", "application/json")),
-    body=b"",
-)
-
-assert request3.fingerprint() == request4.fingerprint()
-```
-
-### Cassette Serialization
-
-```python
-import json
-
-# Save cassette to JSON file
-cassette = Cassette(interactions=(interaction,))
-json_data = cassette.model_dump_json(indent=2)
-
-with open("cassette.json", "w") as f:
-    f.write(json_data)
-
-# Load cassette from JSON file
-with open("cassette.json") as f:
-    loaded_cassette = Cassette.model_validate_json(f.read())
-
-# Verify loaded cassette works
-broker = Broker(cassette=loaded_cassette)
-chunks = list(broker.replay(request))
-assert chunks[0].data == b'{"id": 42, "name": "Alice"}'
-```
-
-### Python Dict Serialization
-
-```python
-# Serialize to Python dict
-cassette_dict = cassette.model_dump()
-print(cassette_dict)
-# {'interactions': [{'request': {...}, 'fingerprint': {...}, ...}]}
-
-# Deserialize from Python dict
-restored_cassette = Cassette.model_validate(cassette_dict)
-```
-
-### JSON Schema Generation
-
-```python
-# Generate JSON schema for documentation
-schema = Cassette.model_json_schema()
-print(json.dumps(schema, indent=2))
-# {
-#   "type": "object",
-#   "properties": {
-#     "interactions": {...}
-#   },
-#   ...
-# }
-```
-
-## API Documentation
-
-### Core Classes
-
-- **`InteractionRequest`**: Immutable request data (protocol, action, target, headers, body)
-- **`RequestFingerprint`**: SHA-256 hash-based request identifier
-- **`ResponseChunk`**: Single chunk of response data with sequence number
-- **`Interaction`**: Recorded request-response pair with fingerprint
-- **`Cassette`**: Immutable collection of interactions with O(1) fingerprint index
-- **`Broker`**: Replay engine that matches requests and streams responses
-
-### Exceptions
-
-- **`InteractionNotFoundError`**: Raised when no matching interaction exists for a request
-- **`InteractionValidationError`**: Raised when interaction validation fails (e.g., fingerprint mismatch, invalid chunk sequence)
 
 ## Development
 
 ### Prerequisites
 
 - Python 3.10+
-- [uv](https://github.com/astral-sh/uv) (recommended) or pip
+- [uv](https://github.com/astral-sh/uv) (recommended)
 
-### Setup
+### Setup & Testing
 
 ```bash
-# Clone repository
+# Clone and install
 git clone https://github.com/osoekawaitlab/interposition.git
 cd interposition
-
-# Install dependencies
 uv pip install -e . --group=dev
-```
 
-### Running Tests
-
-```bash
-# Run all tests
+# Run tests
 nox -s tests
-
-# Run unit tests only
-nox -s tests_unit
-
-# Run E2E tests only
-nox -s tests_e2e
-
-# Run all test sessions (all Python versions)
-nox -s tests_all_versions
-```
-
-### Code Quality
-
-```bash
-# Type checking
-nox -s mypy
-
-# Linting
-nox -s lint
-
-# Format code
-nox -s format_code
 ```
 
 ## Architecture
