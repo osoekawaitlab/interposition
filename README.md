@@ -205,16 +205,6 @@ uv pip install -e . --group=dev
 nox -s tests
 ```
 
-## Architecture
-
-See [Architecture Decision Records](docs/architecture/adr.md) for details on design decisions:
-
-- [ADR 0001: Pydantic v2 for Data Models](docs/adr/0001-pydantic-for-data-models.md)
-- [ADR 0002: SHA-256 Fingerprinting](docs/adr/0002-sha256-fingerprinting.md)
-- [ADR 0003: Generator Streaming](docs/adr/0003-generator-streaming.md)
-- [ADR 0004: First-Match Strategy](docs/adr/0004-first-match-strategy.md)
-- [ADR 0005: Cassette Index](docs/adr/0005-cassette-index.md)
-
 ## License
 
 MIT
