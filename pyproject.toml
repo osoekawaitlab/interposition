@@ -20,10 +20,10 @@ classifiers = [
     "Typing :: Typed",
 ]
 requires-python = ">=3.10"
-dependencies = []
-
-[project.scripts]
-interposition = "interposition.cli:main"
+dependencies = [
+    "pydantic>=2.0,<3.0",
+    "typing-extensions>=4.5.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/osoekawaitlab/interposition"
@@ -106,6 +106,16 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 mypy_path = "e2e/stubs"
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "pydantic"
+disallow_any_explicit = false
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]

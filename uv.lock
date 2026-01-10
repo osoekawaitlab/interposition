@@ -520,6 +520,10 @@ wheels = [
 [[package]]
 name = "interposition"
 source = { editable = "." }
+dependencies = [
+    { name = "pydantic" },
+    { name = "typing-extensions" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -541,6 +545,10 @@ docs = [
 ]
 
 [package.metadata]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2.0,<3.0" },
+    { name = "typing-extensions", specifier = ">=4.5.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [
