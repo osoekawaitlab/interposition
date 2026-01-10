@@ -1,5 +1,7 @@
 nav:
   - Home: index.md
+  - Guides:
+    - Adapters: guides/adapters.md
   - Architecture:
     - Overview: architecture/overview.md
     - Records: adr/
