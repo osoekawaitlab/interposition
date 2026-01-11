@@ -5,3 +5,4 @@ nav:
   - Architecture:
     - Overview: architecture/overview.md
     - Records: adr/
+  - API Reference: api/api_reference.md
