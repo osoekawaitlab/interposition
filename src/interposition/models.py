@@ -16,6 +16,10 @@ from typing_extensions import Self
 
 SHA256_HEX_LENGTH = 64
 
+# JSON serialization settings for canonical fingerprint generation
+_CANONICAL_JSON_SEPARATORS = (",", ":")
+_CANONICAL_JSON_SORT_KEYS = True
+
 
 class InteractionValidationError(ValueError):
     """Raised when interaction validation fails."""
@@ -117,7 +121,11 @@ class RequestFingerprint(BaseModel):
             sorted_headers,
             request.body.hex(),
         ]
-        canonical = json.dumps(canonical_data, separators=(",", ":"), sort_keys=True)
+        canonical = json.dumps(
+            canonical_data,
+            separators=_CANONICAL_JSON_SEPARATORS,
+            sort_keys=_CANONICAL_JSON_SORT_KEYS,
+        )
         hash_value = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
         return cls(value=hash_value)
 
