@@ -31,7 +31,9 @@ class ResponseChunk(BaseModel):
     Attributes:
         data: Chunk payload as bytes
         sequence: Zero-based chunk position in response stream
-        metadata: Optional chunk-specific metadata as key-value pairs
+        metadata: Optional chunk metadata as (key, value) string pairs.
+            Examples: timing info, encoding, content-type for this chunk.
+            Default is empty tuple.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -137,7 +139,10 @@ class Interaction(BaseModel):
         request: The original InteractionRequest
         fingerprint: Precomputed request fingerprint for matching
         response_chunks: Ordered sequence of response chunks
-        metadata: Optional interaction-level metadata as key-value pairs
+        metadata: Optional interaction metadata as (key, value) pairs.
+            Examples: recording timestamp, session ID, test scenario name.
+            Useful for debugging and tracing recorded interactions.
+            Default is empty tuple.
     """
 
     model_config = ConfigDict(frozen=True)
