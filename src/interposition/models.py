@@ -5,8 +5,16 @@ from __future__ import annotations
 import hashlib
 import json
 
-from pydantic import BaseModel, ConfigDict, PrivateAttr, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    PrivateAttr,
+    field_validator,
+    model_validator,
+)
 from typing_extensions import Self
+
+SHA256_HEX_LENGTH = 64
 
 
 class InteractionValidationError(ValueError):
@@ -67,6 +75,28 @@ class RequestFingerprint(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     value: str
+
+    @field_validator("value")
+    @classmethod
+    def validate_sha256_hex(cls, v: str) -> str:
+        """Validate that value is a valid SHA-256 hex string.
+
+        Args:
+            v: The fingerprint value to validate
+
+        Returns:
+            The validated value
+
+        Raises:
+            ValueError: If value is not exactly 64 hex characters
+        """
+        if len(v) != SHA256_HEX_LENGTH:
+            msg = f"SHA-256 hex must be exactly {SHA256_HEX_LENGTH} characters"
+            raise ValueError(msg)
+        if not all(c in "0123456789abcdef" for c in v):
+            msg = "Invalid hex characters in fingerprint"
+            raise ValueError(msg)
+        return v
 
     @classmethod
     def from_request(cls, request: InteractionRequest) -> Self:

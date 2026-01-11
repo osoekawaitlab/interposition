@@ -5,7 +5,11 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from interposition.models import InteractionRequest, RequestFingerprint
+from interposition.models import (
+    SHA256_HEX_LENGTH,
+    InteractionRequest,
+    RequestFingerprint,
+)
 
 
 class TestInteractionRequest:
@@ -88,7 +92,6 @@ class TestRequestFingerprint:
 
     def test_from_request_produces_sha256(self) -> None:
         """Test that fingerprint uses SHA-256."""
-        sha256_hex_length = 64  # SHA-256 produces 64 hex characters
         request = InteractionRequest(
             protocol="test-proto",
             action="fetch",
@@ -99,7 +102,7 @@ class TestRequestFingerprint:
 
         fingerprint = RequestFingerprint.from_request(request)
 
-        assert len(fingerprint.value) == sha256_hex_length
+        assert len(fingerprint.value) == SHA256_HEX_LENGTH
         assert all(c in "0123456789abcdef" for c in fingerprint.value)
 
     def test_fingerprint_includes_all_fields(self) -> None:
@@ -165,7 +168,25 @@ class TestRequestFingerprint:
 
     def test_is_frozen(self) -> None:
         """Test that RequestFingerprint is immutable."""
-        fingerprint = RequestFingerprint(value="a" * 64)
+        fingerprint = RequestFingerprint(value="a" * SHA256_HEX_LENGTH)
 
         with pytest.raises(ValidationError, match="frozen"):
             fingerprint.value = "modified"  # type: ignore[misc]
+
+    def test_validates_sha256_hex_length(self) -> None:
+        """Test that fingerprint value must be exactly 64 characters."""
+        with pytest.raises(ValidationError, match="64 characters"):
+            RequestFingerprint(value="a" * (SHA256_HEX_LENGTH - 1))  # Too short
+
+        with pytest.raises(ValidationError, match="64 characters"):
+            RequestFingerprint(value="a" * (SHA256_HEX_LENGTH + 1))  # Too long
+
+    def test_validates_hex_characters(self) -> None:
+        """Test that fingerprint value must contain only hex characters."""
+        # 'g' is not a hex character
+        with pytest.raises(ValidationError, match="hex characters"):
+            RequestFingerprint(value="g" * SHA256_HEX_LENGTH)
+
+        # Uppercase is not allowed
+        with pytest.raises(ValidationError, match="hex characters"):
+            RequestFingerprint(value="Z" * SHA256_HEX_LENGTH)

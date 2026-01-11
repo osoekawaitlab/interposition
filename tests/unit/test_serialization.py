@@ -8,6 +8,7 @@ import pytest
 from pydantic import ValidationError
 
 from interposition.models import (
+    SHA256_HEX_LENGTH,
     Cassette,
     Interaction,
     InteractionRequest,
@@ -131,16 +132,18 @@ class TestRequestFingerprintSerialization:
 
     def test_model_dump_returns_dict(self) -> None:
         """Test that model_dump returns a dictionary."""
-        fingerprint = RequestFingerprint(value="abc123")
+        test_value = "a" * SHA256_HEX_LENGTH
+        fingerprint = RequestFingerprint(value=test_value)
 
         result = fingerprint.model_dump()
 
         assert isinstance(result, dict)
-        assert result["value"] == "abc123"
+        assert result["value"] == test_value
 
     def test_roundtrip_serialization(self) -> None:
         """Test that serialization and deserialization roundtrip correctly."""
-        original = RequestFingerprint(value="abc123")
+        test_value = "b" * SHA256_HEX_LENGTH
+        original = RequestFingerprint(value=test_value)
 
         json_str = original.model_dump_json()
         restored = RequestFingerprint.model_validate_json(json_str)
@@ -218,9 +221,11 @@ class TestInteractionSerialization:
             response_chunks=(ResponseChunk(data=b"test", sequence=0),),
         )
 
-        # Get JSON and modify fingerprint to be invalid
+        # Get JSON and modify fingerprint to be valid hex but wrong value
         data = json.loads(valid_interaction.model_dump_json())
-        data["fingerprint"]["value"] = "invalid-fingerprint"
+        data["fingerprint"]["value"] = (
+            "f" * SHA256_HEX_LENGTH
+        )  # Valid hex, but doesn't match request
         json_str = json.dumps(data)
 
         # Should raise Pydantic ValidationError (wrapping our domain error)
