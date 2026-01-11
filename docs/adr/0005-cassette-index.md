@@ -92,6 +92,7 @@ This decision should be revisited if:
 - Memory pressure from large indexes becomes an issue (consider specialized data structures)
 - Alternative frozen dataclass patterns emerge (Python 3.13+ features)
 - Cassette persistence requires serializing/deserializing the index (versioning strategy needed)
+- Matching strategy becomes pluggable (index should be built from the configured fingerprinting strategy)
 
 ## References
 

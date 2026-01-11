@@ -156,6 +156,25 @@ class TestRequestFingerprint:
         )
         assert RequestFingerprint.from_request(modified) != base_fingerprint
 
+        # Change headers order
+        modified = InteractionRequest(
+            protocol="test-proto",
+            action="fetch",
+            target="resource-123",
+            headers=(("X-Second", "value2"), ("X-First", "value1")),
+            body=b"test",
+        )
+        reordered = InteractionRequest(
+            protocol="test-proto",
+            action="fetch",
+            target="resource-123",
+            headers=(("X-First", "value1"), ("X-Second", "value2")),
+            body=b"test",
+        )
+        assert RequestFingerprint.from_request(
+            modified
+        ) != RequestFingerprint.from_request(reordered)
+
         # Change body
         modified = InteractionRequest(
             protocol="test-proto",

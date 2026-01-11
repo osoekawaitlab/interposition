@@ -92,6 +92,7 @@ This decision should be revisited if:
 - Users frequently need round-robin behavior (consider StatefulBroker wrapper)
 - Duplicate detection is required (add validation utility, not core behavior)
 - Complex matching strategies are needed (introduce pluggable strategy pattern)
+- Matching strategy becomes pluggable (keep first-match as the default when duplicates occur)
 
 Use first-match as the foundation. More complex strategies can be layered on top without changing the core behavior.
 

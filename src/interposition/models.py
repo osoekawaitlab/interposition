@@ -114,13 +114,13 @@ class RequestFingerprint(BaseModel):
         Returns:
             RequestFingerprint with SHA-256 hash value
         """
-        # Canonical order: protocol, action, target, sorted_headers, body
-        sorted_headers = tuple(sorted(request.headers))
+        # Canonical order: protocol, action, target, headers, body
+        # Preserve header ordering to avoid normalization.
         canonical_data = [
             request.protocol,
             request.action,
             request.target,
-            sorted_headers,
+            request.headers,
             request.body.hex(),
         ]
         canonical = json.dumps(
