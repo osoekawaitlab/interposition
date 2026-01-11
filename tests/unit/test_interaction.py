@@ -122,6 +122,23 @@ class TestInteraction:
                 ),
             )
 
+    def test_validates_response_chunks_not_empty(self) -> None:
+        """Test that response_chunks cannot be empty."""
+        request = InteractionRequest(
+            protocol="test-proto",
+            action="fetch",
+            target="resource-123",
+            headers=(),
+            body=b"",
+        )
+
+        with pytest.raises(ValueError, match="Response chunks cannot be empty"):
+            Interaction(
+                request=request,
+                fingerprint=request.fingerprint(),
+                response_chunks=(),
+            )
+
     def test_allows_single_chunk(self) -> None:
         """Test that single-chunk responses are valid."""
         request = InteractionRequest(
