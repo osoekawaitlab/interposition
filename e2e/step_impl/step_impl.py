@@ -212,3 +212,55 @@ def response_stream_contains_first_interaction_chunks() -> None:
             f"Chunk {i} sequence mismatch: "
             f"expected {expected.sequence}, got {actual.sequence}"
         )
+
+
+def _parse_headers(header_text: str) -> tuple[tuple[str, str], ...]:
+    """Parse comma-delimited header string into ordered header tuples."""
+    if not header_text:
+        return ()
+    headers: list[tuple[str, str]] = []
+    for part in header_text.split(","):
+        name, value = part.split(":", 1)
+        headers.append((name.strip(), value.strip()))
+    return tuple(headers)
+
+
+@step('Create cassette with recorded interaction headers "<headers>"')
+def create_cassette_with_headers(headers: str) -> None:
+    """Create cassette with headers in provided order."""
+    request = InteractionRequest(
+        protocol="test-proto",
+        action="fetch",
+        target="resource-123",
+        headers=_parse_headers(headers),
+        body=b"test-data",
+    )
+    chunks = (ResponseChunk(data=b"response", sequence=0),)
+    interaction = Interaction(
+        request=request,
+        fingerprint=request.fingerprint(),
+        response_chunks=chunks,
+    )
+    cassette = Cassette(interactions=(interaction,))
+    data_store.scenario["cassette"] = cassette
+
+
+@step('Broker receives request with headers "<headers>"')
+def broker_receives_request_with_headers(headers: str) -> None:
+    """Send request with header order to broker."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    broker = Broker(cassette=cassette)
+    request = InteractionRequest(
+        protocol="test-proto",
+        action="fetch",
+        target="resource-123",
+        headers=_parse_headers(headers),
+        body=b"test-data",
+    )
+    try:
+        chunks = list(broker.replay(request))
+        data_store.scenario["response_chunks"] = chunks
+        data_store.scenario["error"] = None
+    except InteractionNotFoundError as e:
+        data_store.scenario["response_chunks"] = None
+        data_store.scenario["error"] = e
