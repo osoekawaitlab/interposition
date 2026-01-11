@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 from pydantic import ValidationError
 
@@ -12,44 +14,27 @@ from interposition.models import (
     ResponseChunk,
 )
 
+if TYPE_CHECKING:
+    from tests.unit.conftest import MakeInteractionProtocol
+
 
 class TestCassette:
     """Test suite for Cassette."""
 
-    def test_creates_with_interactions(self) -> None:
+    def test_creates_with_interactions(
+        self, make_interaction: MakeInteractionProtocol
+    ) -> None:
         """Test that Cassette can be created with interactions."""
-        request = InteractionRequest(
-            protocol="test-proto",
-            action="fetch",
-            target="resource-123",
-            headers=(),
-            body=b"",
-        )
-        interaction = Interaction(
-            request=request,
-            fingerprint=request.fingerprint(),
-            response_chunks=(ResponseChunk(data=b"test", sequence=0),),
-        )
+        interaction = make_interaction()
 
         cassette = Cassette(interactions=(interaction,))
 
         assert cassette.interactions == (interaction,)
         assert len(cassette.interactions) == 1
 
-    def test_is_frozen(self) -> None:
+    def test_is_frozen(self, make_interaction: MakeInteractionProtocol) -> None:
         """Test that Cassette is immutable."""
-        request = InteractionRequest(
-            protocol="test-proto",
-            action="fetch",
-            target="resource-123",
-            headers=(),
-            body=b"",
-        )
-        interaction = Interaction(
-            request=request,
-            fingerprint=request.fingerprint(),
-            response_chunks=(ResponseChunk(data=b"test", sequence=0),),
-        )
+        interaction = make_interaction()
         cassette = Cassette(interactions=(interaction,))
 
         with pytest.raises(ValidationError, match="frozen"):
