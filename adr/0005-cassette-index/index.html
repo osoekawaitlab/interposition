@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0000-adr-template/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0005-cassette-index/">
       
       
-        <link rel="prev" href="../../architecture/overview/">
+        <link rel="prev" href="../0004-first-match-strategy/">
       
       
-        <link rel="next" href="../0001-pydantic-for-data-models/">
+        <link rel="next" href="../0006-external-adapters/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here - interposition</title>
+        <title>ADR 0005: Build Fingerprint Index for O(1) Lookup - interposition</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here" class="md-skip">
+        <a href="#adr-0005-build-fingerprint-index-for-o1-lookup" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+              ADR 0005: Build Fingerprint Index for O(1) Lookup
             
           </span>
         </div>
@@ -608,6 +608,146 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-pydantic-for-data-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0001: Use Pydantic v2 for Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-sha256-fingerprinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0002: Use SHA-256 for Request Fingerprinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-generator-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0003: Use Generator Pattern for Response Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-first-match-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0004: Use First-Match Strategy for Duplicate Interactions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -627,7 +767,7 @@
   <span class="md-ellipsis">
     
   
-    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+    ADR 0005: Build Fingerprint Index for O(1) Lookup
   
 
     
@@ -645,7 +785,7 @@
   <span class="md-ellipsis">
     
   
-    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+    ADR 0005: Build Fingerprint Index for O(1) Lookup
   
 
     
@@ -773,6 +913,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linear-search-no-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear Search (No Index)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-index-on-first-lookup-lazy-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Index on First Lookup (Lazy Initialization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-index-separate-data-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Index (Separate Data Structure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-list-instead-of-tuple-for-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use List Instead of Tuple for Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-interactions-in-dict-no-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store Interactions in Dict (No Tuple)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -801,146 +1002,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0001-pydantic-for-data-models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0001: Use Pydantic v2 for Data Models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0002-sha256-fingerprinting/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0002: Use SHA-256 for Request Fingerprinting
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0003-generator-streaming/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0003: Use Generator Pattern for Response Streaming
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0004-first-match-strategy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0004: Use First-Match Strategy for Duplicate Interactions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0005-cassette-index/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0005: Build Fingerprint Index for O(1) Lookup
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1145,6 +1206,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linear-search-no-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear Search (No Index)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-index-on-first-lookup-lazy-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Index on First Lookup (Lazy Initialization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-index-separate-data-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Index (Separate Data Structure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-list-instead-of-tuple-for-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use List Instead of Tuple for Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-interactions-in-dict-no-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store Interactions in Dict (No Tuple)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1189,47 +1311,90 @@
   
 
 
-<h1 id="adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here">ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here<a class="headerlink" href="#adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0005-build-fingerprint-index-for-o1-lookup">ADR 0005: Build Fingerprint Index for O(1) Lookup<a class="headerlink" href="#adr-0005-build-fingerprint-index-for-o1-lookup" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<p>[Proposed | Accepted | Deprecated | Superseded]</p>
-<!-- If superseded, include a reference to the new ADR -->
-
+<p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>YYYY-MM-DD</p>
+<p>2026-01-05</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Describe the context and problem statement. What is the architectural challenge that needs to be addressed? Include any relevant constraints or requirements that influenced the decision.</p>
+<p>The cassette stores interactions as a tuple and needs to find interactions matching a given request fingerprint. Without an index, finding a match requires linear search (O(n)) through all interactions. For large cassettes with hundreds or thousands of interactions, this becomes a performance bottleneck.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>State the architectural decision clearly and concisely. What specific approach, technology, pattern, or solution was chosen?</p>
+<p>Build a <code>dict[RequestFingerprint, int]</code> index at cassette construction that maps fingerprints to their first occurrence position in the interactions tuple. The index is built using a model validator and stored as a private attribute.</p>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<p>Explain the reasoning that led to this decision. Why was this particular option selected among the alternatives? Include relevant factors such as:</p>
 <ul>
-<li>Technical considerations</li>
-<li>Business requirements</li>
-<li>Team capabilities</li>
-<li>Time constraints</li>
-<li>Cost implications</li>
+<li><strong>O(1) lookup</strong>: Dictionary lookup is constant time, vastly superior to O(n) linear search</li>
+<li><strong>Initialization cost</strong>: Index is built once during cassette creation, amortized over many lookups</li>
+<li><strong>Memory efficiency</strong>: Index stores only integers (positions), not duplicate interaction data</li>
+<li><strong>First-match alignment</strong>: Index naturally stores first occurrence, implementing ADR 0004</li>
+<li><strong>Immutable after creation</strong>: Index is built during construction and never modified</li>
+<li><strong>Transparent</strong>: Implementation detail hidden from users (private attribute)</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
-<p>List the benefits and positive outcomes expected from this decision.</p>
-<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
-<p>List potential challenges, risks, or negative consequences along with possible mitigation strategies.</p>
-<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<p>Describe other options that were considered and why they were not selected. For each alternative, briefly explain:</p>
 <ul>
-<li>Key characteristics</li>
-<li>Pros and cons relative to the chosen solution</li>
-<li>Reasons for rejection</li>
+<li>Replay performance is independent of cassette size (O(1) vs O(n))</li>
+<li>Enables large cassettes (thousands of interactions) without performance degradation</li>
+<li>Simple implementation using standard library dict</li>
+<li>Index construction is deterministic and testable</li>
+<li>Memory overhead is minimal (one int per unique fingerprint)</li>
+</ul>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Upfront cost to build index during cassette creation (mitigation: acceptable one-time cost amortized over many lookups)</li>
+<li>Uses <code>object.__setattr__</code> to mutate frozen model (mitigation: required for immutability, Pydantic pattern for private attributes)</li>
+<li>Memory overhead for the index dict (mitigation: minimal, ~8 bytes per unique fingerprint)</li>
+<li>Index is not exposed in serialization or repr (mitigation: intentional design, private implementation detail)</li>
+</ul>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="linear-search-no-index">Linear Search (No Index)<a class="headerlink" href="#linear-search-no-index" title="Permanent link">&para;</a></h3>
+<p>Finding interactions by iterating through the tuple without an index.</p>
+<ul>
+<li><strong>Pros</strong>: No memory overhead, simpler implementation</li>
+<li><strong>Cons</strong>: O(n) lookup time becomes bottleneck for large cassettes, performance degrades proportionally with cassette size</li>
+<li><strong>Reason for rejection</strong>: Performance is unacceptable for production use with large cassettes (hundreds or thousands of interactions)</li>
+</ul>
+<h3 id="build-index-on-first-lookup-lazy-initialization">Build Index on First Lookup (Lazy Initialization)<a class="headerlink" href="#build-index-on-first-lookup-lazy-initialization" title="Permanent link">&para;</a></h3>
+<p>Deferring index construction until the first lookup call.</p>
+<ul>
+<li><strong>Pros</strong>: Defers cost if cassette is never used</li>
+<li><strong>Cons</strong>: Requires mutable state to track "index built" flag, violates frozen model immutability principle</li>
+<li><strong>Reason for rejection</strong>: Breaks immutability guarantees; construction-time indexing is simpler and aligns with frozen model design</li>
+</ul>
+<h3 id="external-index-separate-data-structure">External Index (Separate Data Structure)<a class="headerlink" href="#external-index-separate-data-structure" title="Permanent link">&para;</a></h3>
+<p>Maintaining the index as a separate object outside the cassette.</p>
+<ul>
+<li><strong>Pros</strong>: Clear separation of concerns</li>
+<li><strong>Cons</strong>: Requires managing two objects (cassette + index) in sync, more complex API (users must pass both), risk of desynchronization if index is mutated</li>
+<li><strong>Reason for rejection</strong>: API complexity and synchronization risk outweigh benefits; internal index is simpler and safer</li>
+</ul>
+<h3 id="use-list-instead-of-tuple-for-interactions">Use List Instead of Tuple for Interactions<a class="headerlink" href="#use-list-instead-of-tuple-for-interactions" title="Permanent link">&para;</a></h3>
+<p>Storing interactions in a mutable list to enable direct mutation.</p>
+<ul>
+<li><strong>Pros</strong>: No workaround needed for frozen models</li>
+<li><strong>Cons</strong>: Mutable collection contradicts immutability principle, no advantage for index-based access (tuple supports indexing)</li>
+<li><strong>Reason for rejection</strong>: Immutability is a core design principle; tuple is the correct choice for frozen data</li>
+</ul>
+<h3 id="store-interactions-in-dict-no-tuple">Store Interactions in Dict (No Tuple)<a class="headerlink" href="#store-interactions-in-dict-no-tuple" title="Permanent link">&para;</a></h3>
+<p>Using a dict mapping fingerprints to interactions directly, eliminating the tuple.</p>
+<ul>
+<li><strong>Pros</strong>: Built-in O(1) lookup without separate index</li>
+<li><strong>Cons</strong>: Loses insertion order for duplicates (violates ADR 0004), cannot represent multiple interactions with same fingerprint, fundamentally different data model</li>
+<li><strong>Reason for rejection</strong>: Incompatible with first-match strategy; duplicates are legitimate and must be preserved in order</li>
 </ul>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<p>Outline any follow-up actions, future considerations, or potential changes that might be necessary as a result of this decision. Include potential triggers for revisiting this decision.</p>
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p>List any relevant documents, articles, books, or other resources that supported this decision:</p>
+<p>This decision should be revisited if:</p>
 <ul>
-<li>Links to relevant documentation</li>
-<li>Research materials</li>
-<li>Benchmarks or performance data</li>
-<li>Team discussions or meeting notes</li>
+<li>Profiling shows index build time is a bottleneck (unlikely, dict insert is fast)</li>
+<li>Memory pressure from large indexes becomes an issue (consider specialized data structures)</li>
+<li>Alternative frozen dataclass patterns emerge (Python 3.13+ features)</li>
+<li>Cassette persistence requires serializing/deserializing the index (versioning strategy needed)</li>
+<li>Matching strategy becomes pluggable (index should be built from the configured fingerprinting strategy)</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://docs.python.org/3/library/stdtypes.html#dict">Python dict implementation</a></li>
+<li><a href="https://docs.python.org/3/library/dataclasses.html#frozen-instances">Dataclass frozen=True documentation</a></li>
+<li><a href="https://wiki.python.org/moin/TimeComplexity">Big-O Complexity of Python Operations</a></li>
 </ul>
 
 

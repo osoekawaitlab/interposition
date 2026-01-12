@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0000-adr-template/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0002-sha256-fingerprinting/">
       
       
-        <link rel="prev" href="../../architecture/overview/">
+        <link rel="prev" href="../0001-pydantic-for-data-models/">
       
       
-        <link rel="next" href="../0001-pydantic-for-data-models/">
+        <link rel="next" href="../0003-generator-streaming/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here - interposition</title>
+        <title>ADR 0002: Use SHA-256 for Request Fingerprinting - interposition</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here" class="md-skip">
+        <a href="#adr-0002-use-sha-256-for-request-fingerprinting" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+              ADR 0002: Use SHA-256 for Request Fingerprinting
             
           </span>
         </div>
@@ -608,6 +608,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-pydantic-for-data-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0001: Use Pydantic v2 for Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -627,7 +683,7 @@
   <span class="md-ellipsis">
     
   
-    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+    ADR 0002: Use SHA-256 for Request Fingerprinting
   
 
     
@@ -645,7 +701,7 @@
   <span class="md-ellipsis">
     
   
-    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+    ADR 0002: Use SHA-256 for Request Fingerprinting
   
 
     
@@ -773,6 +829,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-request-comparison-__eq__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Request Comparison (__eq__)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#md5-hashing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MD5 Hashing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-cryptographic-hashes-xxhash-murmurhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-cryptographic Hashes (xxHash, MurmurHash)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuple-based-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuple-based Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -801,62 +907,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0001-pydantic-for-data-models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0001: Use Pydantic v2 for Data Models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0002-sha256-fingerprinting/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0002: Use SHA-256 for Request Fingerprinting
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1145,6 +1195,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-request-comparison-__eq__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Request Comparison (__eq__)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#md5-hashing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MD5 Hashing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-cryptographic-hashes-xxhash-murmurhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-cryptographic Hashes (xxHash, MurmurHash)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuple-based-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuple-based Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1189,47 +1289,81 @@
   
 
 
-<h1 id="adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here">ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here<a class="headerlink" href="#adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0002-use-sha-256-for-request-fingerprinting">ADR 0002: Use SHA-256 for Request Fingerprinting<a class="headerlink" href="#adr-0002-use-sha-256-for-request-fingerprinting" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<p>[Proposed | Accepted | Deprecated | Superseded]</p>
-<!-- If superseded, include a reference to the new ADR -->
-
+<p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>YYYY-MM-DD</p>
+<p>2026-01-05</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Describe the context and problem statement. What is the architectural challenge that needs to be addressed? Include any relevant constraints or requirements that influenced the decision.</p>
+<p>The replay system needs to match incoming requests against recorded interactions. This requires a stable, deterministic fingerprinting mechanism that uniquely identifies requests based on their protocol, action, target, headers, and body content. The fingerprint must be consistent across different processes and Python sessions.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>State the architectural decision clearly and concisely. What specific approach, technology, pattern, or solution was chosen?</p>
+<p>Use SHA-256 hashing with canonical JSON serialization for request fingerprinting. The canonical representation is generated by serializing a list of request fields <code>[protocol, action, target, headers, body_hex]</code> using <code>json.dumps</code> with <code>separators=(",", ":")</code> and <code>sort_keys=True</code> to ensure determinism and prevent delimiter collisions. Header ordering is preserved (no normalization).</p>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<p>Explain the reasoning that led to this decision. Why was this particular option selected among the alternatives? Include relevant factors such as:</p>
 <ul>
-<li>Technical considerations</li>
-<li>Business requirements</li>
-<li>Team capabilities</li>
-<li>Time constraints</li>
-<li>Cost implications</li>
+<li><strong>Stability</strong>: Hash-based fingerprints are deterministic and consistent across processes</li>
+<li><strong>Collision resistance</strong>: SHA-256 combined with structure-preserving JSON serialization prevents accidental collisions (e.g., when fields contain the delimiter)</li>
+<li><strong>Standard library</strong>: Available in Python's <code>hashlib</code> and <code>json</code> without external dependencies</li>
+<li><strong>Canonical ordering</strong>: Fixed JSON separators ensure identical requests produce identical fingerprints regardless of environment without normalizing request data</li>
+<li><strong>Binary-safe</strong>: Hex-encoded body in JSON handles arbitrary binary data safely</li>
+<li><strong>Compact</strong>: Fixed-length 64-character hex digest is memory-efficient</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
-<p>List the benefits and positive outcomes expected from this decision.</p>
-<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
-<p>List potential challenges, risks, or negative consequences along with possible mitigation strategies.</p>
-<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<p>Describe other options that were considered and why they were not selected. For each alternative, briefly explain:</p>
 <ul>
-<li>Key characteristics</li>
-<li>Pros and cons relative to the chosen solution</li>
-<li>Reasons for rejection</li>
+<li>Fingerprints are stable across application restarts and different machines</li>
+<li>O(1) lookup using fingerprints as dictionary keys</li>
+<li>No false positives from hash collisions in realistic scenarios</li>
+<li>Header order affects matching (no normalization)</li>
+<li>Works with any protocol (protocol-agnostic design)</li>
+</ul>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Hash computation has O(n) cost proportional to request size (mitigation: acceptable for typical request sizes)</li>
+<li>Changing canonical format breaks compatibility with existing cassettes (mitigation: version 0 is in-memory only)</li>
+<li>Cryptographic hashing may be overkill for this use case (mitigation: no measurable performance impact)</li>
+</ul>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="direct-request-comparison-__eq__">Direct Request Comparison (<code>__eq__</code>)<a class="headerlink" href="#direct-request-comparison-__eq__" title="Permanent link">&para;</a></h3>
+<p>Using direct object equality comparison to find matching requests.</p>
+<ul>
+<li><strong>Pros</strong>: Simple implementation, no hashing overhead</li>
+<li><strong>Cons</strong>: O(n) lookup time for finding interactions in cassette, cannot use requests as dictionary keys without stable hash</li>
+<li><strong>Reason for rejection</strong>: Poor performance for large cassettes; O(n) lookup vs O(1) with hash-based index</li>
+</ul>
+<h3 id="md5-hashing">MD5 Hashing<a class="headerlink" href="#md5-hashing" title="Permanent link">&para;</a></h3>
+<p>Using MD5 hash algorithm for fingerprinting.</p>
+<ul>
+<li><strong>Pros</strong>: Faster than SHA-256, sufficient for non-cryptographic use</li>
+<li><strong>Cons</strong>: Considered cryptographically broken, community perception of MD5 weakness could undermine trust</li>
+<li><strong>Reason for rejection</strong>: Reputational risk outweighs marginal performance gains</li>
+</ul>
+<h3 id="non-cryptographic-hashes-xxhash-murmurhash">Non-cryptographic Hashes (xxHash, MurmurHash)<a class="headerlink" href="#non-cryptographic-hashes-xxhash-murmurhash" title="Permanent link">&para;</a></h3>
+<p>Using fast non-cryptographic hash algorithms like xxHash or MurmurHash.</p>
+<ul>
+<li><strong>Pros</strong>: Faster than SHA-256, designed for hash table use</li>
+<li><strong>Cons</strong>: Requires external dependency, not in standard library, adds maintenance burden</li>
+<li><strong>Reason for rejection</strong>: Performance difference is negligible for this use case; standard library preference</li>
+</ul>
+<h3 id="tuple-based-keys">Tuple-based Keys<a class="headerlink" href="#tuple-based-keys" title="Permanent link">&para;</a></h3>
+<p>Using tuples of request fields directly as dictionary keys.</p>
+<ul>
+<li><strong>Pros</strong>: No hashing overhead, direct comparison</li>
+<li><strong>Cons</strong>: Large memory footprint for storing full request data as keys</li>
+<li><strong>Reason for rejection</strong>: Memory inefficient; stable hashing provides compact keys</li>
 </ul>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<p>Outline any follow-up actions, future considerations, or potential changes that might be necessary as a result of this decision. Include potential triggers for revisiting this decision.</p>
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p>List any relevant documents, articles, books, or other resources that supported this decision:</p>
+<p>This decision should be revisited if:</p>
 <ul>
-<li>Links to relevant documentation</li>
-<li>Research materials</li>
-<li>Benchmarks or performance data</li>
-<li>Team discussions or meeting notes</li>
+<li>Performance profiling shows hashing is a bottleneck (consider faster non-cryptographic hashes)</li>
+<li>Large request bodies cause excessive memory pressure (consider streaming hash calculation without full in-memory loading)</li>
+<li>Cassette persistence is added and backward compatibility becomes critical (use versioning scheme)</li>
+<li>Protocol-specific fingerprinting is needed (extend with pluggable fingerprint strategies)</li>
+<li>Matching rules need to be customized (make fingerprinting + matching strategy injectable, including hash choice)</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://docs.python.org/3/library/hashlib.html">Python hashlib documentation</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">SHA-256 specification</a></li>
 </ul>
 
 

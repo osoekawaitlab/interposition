@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/architecture/overview/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../../guides/adapters/">
       
       
         <link rel="next" href="../../adr/0000-adr-template/">
@@ -244,6 +244,26 @@
   
   
   
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/adapters/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
     
   
   
@@ -259,6 +279,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../api/api_reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
   
 
       
@@ -338,6 +377,95 @@
       
   
   
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adapters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -359,10 +487,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -380,8 +508,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -466,6 +594,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Architecture Decision Records">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adr-0001-use-pydantic-v2-for-data-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0001: Use Pydantic v2 for Data Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0002-use-sha-256-for-request-fingerprinting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0002: Use SHA-256 for Request Fingerprinting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0003-use-generator-pattern-for-response-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0003: Use Generator Pattern for Response Streaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0004-use-first-match-strategy-for-duplicate-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0004: Use First-Match Strategy for Duplicate Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0005-build-fingerprint-index-for-o1-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0005: Build Fingerprint Index for O(1) Lookup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -502,10 +691,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
             
   
   
@@ -523,8 +712,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -562,6 +751,174 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0001-pydantic-for-data-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0001: Use Pydantic v2 for Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0002-sha256-fingerprinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0002: Use SHA-256 for Request Fingerprinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0003-generator-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0003: Use Generator Pattern for Response Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0004-first-match-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0004: Use First-Match Strategy for Duplicate Interactions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0005-cassette-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0005: Build Fingerprint Index for O(1) Lookup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0006-external-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0006: External Protocol Adapters Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -573,6 +930,33 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -612,6 +996,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Architecture Decision Records">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adr-0001-use-pydantic-v2-for-data-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0001: Use Pydantic v2 for Data Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0002-use-sha-256-for-request-fingerprinting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0002: Use SHA-256 for Request Fingerprinting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0003-use-generator-pattern-for-response-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0003: Use Generator Pattern for Response Streaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0004-use-first-match-strategy-for-duplicate-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0004: Use First-Match Strategy for Duplicate Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0005-build-fingerprint-index-for-o1-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0005: Build Fingerprint Index for O(1) Lookup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -637,7 +1082,25 @@
 <h1 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h1>
 <p>This document provides a high-level overview of architectural decisions made for the interposition project.</p>
 <h2 id="architecture-decision-records">Architecture Decision Records<a class="headerlink" href="#architecture-decision-records" title="Permanent link">&para;</a></h2>
-<p>To be filled as architectural decisions are made.</p>
+<h3 id="adr-0001-use-pydantic-v2-for-data-models"><a href="../../adr/0001-pydantic-for-data-models/">ADR-0001: Use Pydantic v2 for Data Models</a><a class="headerlink" href="#adr-0001-use-pydantic-v2-for-data-models" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-05</p>
+<p>Use Pydantic v2 BaseModel for all data models to enable serialization, runtime validation, and immutability without custom code.</p>
+<hr />
+<h3 id="adr-0002-use-sha-256-for-request-fingerprinting"><a href="../../adr/0002-sha256-fingerprinting/">ADR-0002: Use SHA-256 for Request Fingerprinting</a><a class="headerlink" href="#adr-0002-use-sha-256-for-request-fingerprinting" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-05</p>
+<p>Use SHA-256 hash of canonicalized request fields as fingerprints for efficient and collision-resistant interaction matching.</p>
+<hr />
+<h3 id="adr-0003-use-generator-pattern-for-response-streaming"><a href="../../adr/0003-generator-streaming/">ADR-0003: Use Generator Pattern for Response Streaming</a><a class="headerlink" href="#adr-0003-use-generator-pattern-for-response-streaming" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-05</p>
+<p>Use Python generators for streaming response chunks to enable lazy evaluation, memory efficiency, and backpressure support.</p>
+<hr />
+<h3 id="adr-0004-use-first-match-strategy-for-duplicate-interactions"><a href="../../adr/0004-first-match-strategy/">ADR-0004: Use First-Match Strategy for Duplicate Interactions</a><a class="headerlink" href="#adr-0004-use-first-match-strategy-for-duplicate-interactions" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-05</p>
+<p>When multiple interactions have identical fingerprints, return the first match to ensure deterministic and predictable replay behavior.</p>
+<hr />
+<h3 id="adr-0005-build-fingerprint-index-for-o1-lookup"><a href="../../adr/0005-cassette-index/">ADR-0005: Build Fingerprint Index for O(1) Lookup</a><a class="headerlink" href="#adr-0005-build-fingerprint-index-for-o1-lookup" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-05</p>
+<p>Build an in-memory hash map index from fingerprints to interaction positions at cassette construction time for O(1) lookup performance.</p>
 
 
 
