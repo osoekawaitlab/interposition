@@ -43,7 +43,7 @@ The mode is set at Broker construction time and remains constant for the lifetim
 
 ### Concerns
 
-- Mode validation needed at construction time (mitigation: use type system to restrict valid values).
+- Mode validation is static only; runtime validation is not enforced by default (mitigation: rely on type checking and clear documentation).
 - Mode affects multiple methods' behavior (mitigation: document clearly, keep logic localized).
 
 ## Alternatives
