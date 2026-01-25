@@ -4,7 +4,7 @@ Provides record, replay, and control capabilities.
 """
 
 from interposition._version import __version__
-from interposition.errors import InteractionNotFoundError
+from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
 from interposition.models import (
     Cassette,
     Interaction,
@@ -13,15 +13,17 @@ from interposition.models import (
     RequestFingerprint,
     ResponseChunk,
 )
-from interposition.services import Broker
+from interposition.services import Broker, BrokerMode
 
 __all__ = [
     "Broker",
+    "BrokerMode",
     "Cassette",
     "Interaction",
     "InteractionNotFoundError",
     "InteractionRequest",
     "InteractionValidationError",
+    "LiveResponderRequiredError",
     "RequestFingerprint",
     "ResponseChunk",
     "__version__",

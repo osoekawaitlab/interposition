@@ -8,6 +8,7 @@ This page documents the public API of the interposition library.
     options:
       members:
         - Broker
+        - BrokerMode
         - Cassette
         - Interaction
         - InteractionRequest
@@ -15,6 +16,7 @@ This page documents the public API of the interposition library.
         - RequestFingerprint
         - InteractionNotFoundError
         - InteractionValidationError
+        - LiveResponderRequiredError
 
 ## Services
 
@@ -72,6 +74,13 @@ This page documents the public API of the interposition library.
 ### InteractionValidationError
 
 ::: interposition.models.InteractionValidationError
+    options:
+      show_root_heading: false
+      heading_level: 4
+
+### LiveResponderRequiredError
+
+::: interposition.errors.LiveResponderRequiredError
     options:
       show_root_heading: false
       heading_level: 4

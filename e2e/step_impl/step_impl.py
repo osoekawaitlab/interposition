@@ -1,17 +1,21 @@
 """Step implementations for Gauge tests."""
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from getgauge.python import data_store, step
 
 from interposition import (
     Broker,
+    BrokerMode,
     Cassette,
     Interaction,
     InteractionNotFoundError,
     InteractionRequest,
     ResponseChunk,
 )
+
+if TYPE_CHECKING:
+    from interposition.services import LiveResponder
 
 # Replay functionality steps
 
@@ -225,7 +229,7 @@ def _parse_headers(header_text: str) -> tuple[tuple[str, str], ...]:
     return tuple(headers)
 
 
-@step('Create cassette with recorded interaction headers "<headers>"')
+@step("Create cassette with recorded interaction headers <headers>")
 def create_cassette_with_headers(headers: str) -> None:
     """Create cassette with headers in provided order."""
     request = InteractionRequest(
@@ -245,7 +249,7 @@ def create_cassette_with_headers(headers: str) -> None:
     data_store.scenario["cassette"] = cassette
 
 
-@step('Broker receives request with headers "<headers>"')
+@step("Broker receives request with headers <headers>")
 def broker_receives_request_with_headers(headers: str) -> None:
     """Send request with header order to broker."""
     cassette = cast("Cassette", data_store.scenario["cassette"])
@@ -264,3 +268,113 @@ def broker_receives_request_with_headers(headers: str) -> None:
     except InteractionNotFoundError as e:
         data_store.scenario["response_chunks"] = None
         data_store.scenario["error"] = e
+
+
+# Record functionality steps
+
+
+@step("Create empty cassette")
+def create_empty_cassette() -> None:
+    """Create an empty cassette with no interactions."""
+    cassette = Cassette(interactions=())
+    data_store.scenario["cassette"] = cassette
+
+
+@step("Broker in <mode> mode receives request for <protocol> <action> <target>")
+def broker_in_mode_receives_request(
+    mode: str, protocol: str, action: str, target: str
+) -> None:
+    """Send request to broker with specified mode."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    live_responder = cast(
+        "LiveResponder | None", data_store.scenario.get("live_responder")
+    )
+    broker = Broker(
+        cassette=cassette,
+        mode=cast("BrokerMode", mode),
+        live_responder=live_responder,
+    )
+    request = InteractionRequest(
+        protocol=protocol,
+        action=action,
+        target=target,
+        headers=(),
+        body=b"test-data",
+    )
+    try:
+        chunks = list(broker.replay(request))
+        data_store.scenario["response_chunks"] = chunks
+        data_store.scenario["error"] = None
+        # Update cassette reference after replay (may have been modified)
+        data_store.scenario["cassette"] = broker.cassette
+    except InteractionNotFoundError as e:
+        data_store.scenario["response_chunks"] = None
+        data_store.scenario["error"] = e
+
+
+@step("Configure mock live responder returning <response_data>")
+def configure_mock_live_responder(response_data: str) -> None:
+    """Configure a mock live responder that returns the given data."""
+
+    def mock_responder(_request: InteractionRequest) -> tuple[ResponseChunk, ...]:
+        return (ResponseChunk(data=response_data.encode(), sequence=0),)
+
+    data_store.scenario["live_responder"] = mock_responder
+
+
+@step("Configure tracking live responder returning <response_data>")
+def configure_tracking_live_responder(response_data: str) -> None:
+    """Configure a live responder that records whether it was called."""
+    data_store.scenario["live_responder_called"] = False
+
+    def tracking_responder(_request: InteractionRequest) -> tuple[ResponseChunk, ...]:
+        data_store.scenario["live_responder_called"] = True
+        return (ResponseChunk(data=response_data.encode(), sequence=0),)
+
+    data_store.scenario["live_responder"] = tracking_responder
+
+
+@step("Response stream should contain <expected_data>")
+def response_stream_should_contain(expected_data: str) -> None:
+    """Verify response stream contains expected data."""
+    response_chunks = cast(
+        "list[ResponseChunk] | None", data_store.scenario.get("response_chunks")
+    )
+    assert response_chunks is not None, "No response chunks received"
+    actual_data = b"".join(chunk.data for chunk in response_chunks)
+    assert actual_data == expected_data.encode(), (
+        f"Expected {expected_data!r}, got {actual_data!r}"
+    )
+
+
+@step("Cassette should contain one recorded interaction")
+def cassette_should_contain_one_interaction() -> None:
+    """Verify cassette contains exactly one interaction."""
+    cassette = cast("Cassette", data_store.scenario.get("cassette"))
+    assert cassette is not None, "No cassette found"
+    assert len(cassette.interactions) == 1, (
+        f"Expected 1 interaction, got {len(cassette.interactions)}"
+    )
+
+
+@step("Live responder should not be called")
+def live_responder_should_not_be_called() -> None:
+    """Verify the live responder was not invoked."""
+    called = cast("bool", data_store.scenario.get("live_responder_called", False))
+    assert called is False, "Expected live responder not to be called"
+
+
+@step("Live responder should be called")
+def live_responder_should_be_called() -> None:
+    """Verify the live responder was invoked."""
+    called = cast("bool", data_store.scenario.get("live_responder_called", False))
+    assert called is True, "Expected live responder to be called"
+
+
+@step("Serialize and deserialize cassette")
+def serialize_and_deserialize_cassette() -> None:
+    """Serialize cassette to JSON and deserialize back."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    json_str = cassette.model_dump_json()
+    new_cassette = Cassette.model_validate_json(json_str)
+    data_store.scenario["cassette"] = new_cassette
