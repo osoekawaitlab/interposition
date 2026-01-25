@@ -225,7 +225,7 @@ def _parse_headers(header_text: str) -> tuple[tuple[str, str], ...]:
     return tuple(headers)
 
 
-@step('Create cassette with recorded interaction headers "<headers>"')
+@step("Create cassette with recorded interaction headers <headers>")
 def create_cassette_with_headers(headers: str) -> None:
     """Create cassette with headers in provided order."""
     request = InteractionRequest(
@@ -245,7 +245,7 @@ def create_cassette_with_headers(headers: str) -> None:
     data_store.scenario["cassette"] = cassette
 
 
-@step('Broker receives request with headers "<headers>"')
+@step("Broker receives request with headers <headers>")
 def broker_receives_request_with_headers(headers: str) -> None:
     """Send request with header order to broker."""
     cassette = cast("Cassette", data_store.scenario["cassette"])
