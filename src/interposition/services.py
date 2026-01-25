@@ -87,14 +87,11 @@ class Broker:
         if self._live_responder is None:
             raise InteractionNotFoundError(request)
 
-        # Collect chunks from live responder
-        chunks: list[ResponseChunk] = []
-        for chunk in self._live_responder(request):
-            chunks.append(chunk)
-            yield chunk
-
-        # Record the interaction
-        self._record_interaction(request, tuple(chunks))
+        # Collect chunks from live responder before yielding to ensure recording
+        # completes even if the consumer stops early.
+        chunks = tuple(self._live_responder(request))
+        self._record_interaction(request, chunks)
+        yield from chunks
 
     def _record_interaction(
         self,

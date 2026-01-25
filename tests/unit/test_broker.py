@@ -81,6 +81,59 @@ class TestBroker:
         assert recorded.request == request
         assert recorded.response_chunks[0].data == b"live-response"
 
+    def test_replay_records_before_consumer_finishes_iterating(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that recording completes even if consumer stops early."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+        response_chunks = (
+            ResponseChunk(data=b"chunk1", sequence=0),
+            ResponseChunk(data=b"chunk2", sequence=1),
+        )
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return response_chunks
+
+        broker = Broker(cassette=cassette, mode="auto", live_responder=mock_responder)
+
+        stream = broker.replay(request)
+        next(stream)
+
+        assert len(broker.cassette.interactions) == 1
+        recorded = broker.cassette.interactions[0]
+        assert len(recorded.response_chunks) == len(response_chunks)
+        assert recorded.response_chunks[0].data == b"chunk1"
+        assert recorded.response_chunks[1].data == b"chunk2"
+
+    def test_replay_forwards_and_records_in_record_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that record mode forwards MISS and records interaction."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"recorded", sequence=0),)
+
+        broker = Broker(cassette=cassette, mode="record", live_responder=mock_responder)
+
+        chunks = list(broker.replay(request))
+
+        assert chunks[0].data == b"recorded"
+        assert len(broker.cassette.interactions) == 1
+
+    def test_replay_raises_when_live_responder_missing_in_auto_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that auto mode MISS raises without live responder."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+        broker = Broker(cassette=cassette, mode="auto")
+
+        with pytest.raises(InteractionNotFoundError, match="No matching interaction"):
+            list(broker.replay(request))
+
     def test_replay_returns_chunks_for_matching_request(
         self, make_interaction: MakeInteractionProtocol
     ) -> None:

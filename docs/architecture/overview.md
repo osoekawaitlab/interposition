@@ -73,3 +73,11 @@ Use typing.Literal with a type alias for broker mode values instead of Enum, for
 **Status**: Accepted | **Date**: 2026-01-25
 
 Define LiveResponder as a callable port (`Callable[[InteractionRequest], Iterable[ResponseChunk]]`) for protocol-agnostic upstream communication.
+
+---
+
+### [ADR-0010: Buffer Live Responses Before Recording](../adr/0010-record-buffering.md)
+
+**Status**: Accepted | **Date**: 2026-01-25
+
+In record/auto mode on a MISS, fully collect live response chunks before returning any data, then record and return the buffered response.
