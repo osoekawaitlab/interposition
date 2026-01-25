@@ -27,6 +27,13 @@ class TestBroker:
 
         assert broker.cassette == cassette
 
+    def test_creates_with_mode_parameter(self) -> None:
+        """Test that Broker can be created with a mode parameter."""
+        cassette = Cassette(interactions=())
+        broker = Broker(cassette=cassette, mode="replay")
+
+        assert broker.mode == "replay"
+
     def test_replay_returns_chunks_for_matching_request(
         self, make_interaction: MakeInteractionProtocol
     ) -> None:

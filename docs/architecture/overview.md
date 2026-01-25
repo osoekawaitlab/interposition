@@ -41,3 +41,27 @@ When multiple interactions have identical fingerprints, return the first match t
 **Status**: Accepted | **Date**: 2026-01-05
 
 Build an in-memory hash map index from fingerprints to interaction positions at cassette construction time for O(1) lookup performance.
+
+---
+
+### [ADR-0006: External Protocol Adapters Strategy](../adr/0006-external-adapters.md)
+
+**Status**: Accepted | **Date**: 2026-01-10
+
+Keep protocol-specific adapters external to the core package. Users implement adapters suited to their integration strategy (monkey patching, proxy servers, etc.).
+
+---
+
+### [ADR-0007: Broker Mode Parameter for Record Functionality](../adr/0007-broker-mode-parameter.md)
+
+**Status**: Accepted | **Date**: 2026-01-25
+
+Add a mode parameter to the Broker class (replay, record, auto) to determine MISS handling behavior, enabling record functionality.
+
+---
+
+### [ADR-0008: Use Literal Type for Broker Mode Values](../adr/0008-literal-type-for-broker-mode.md)
+
+**Status**: Accepted | **Date**: 2026-01-25
+
+Use typing.Literal with a type alias for broker mode values instead of Enum, for simplicity and Pydantic compatibility.

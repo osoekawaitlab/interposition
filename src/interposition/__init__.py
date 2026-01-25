@@ -13,10 +13,11 @@ from interposition.models import (
     RequestFingerprint,
     ResponseChunk,
 )
-from interposition.services import Broker
+from interposition.services import Broker, BrokerMode
 
 __all__ = [
     "Broker",
+    "BrokerMode",
     "Cassette",
     "Interaction",
     "InteractionNotFoundError",

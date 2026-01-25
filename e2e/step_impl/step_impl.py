@@ -6,6 +6,7 @@ from getgauge.python import data_store, step
 
 from interposition import (
     Broker,
+    BrokerMode,
     Cassette,
     Interaction,
     InteractionNotFoundError,
@@ -255,6 +256,39 @@ def broker_receives_request_with_headers(headers: str) -> None:
         action="fetch",
         target="resource-123",
         headers=_parse_headers(headers),
+        body=b"test-data",
+    )
+    try:
+        chunks = list(broker.replay(request))
+        data_store.scenario["response_chunks"] = chunks
+        data_store.scenario["error"] = None
+    except InteractionNotFoundError as e:
+        data_store.scenario["response_chunks"] = None
+        data_store.scenario["error"] = e
+
+
+# Record functionality steps
+
+
+@step("Create empty cassette")
+def create_empty_cassette() -> None:
+    """Create an empty cassette with no interactions."""
+    cassette = Cassette(interactions=())
+    data_store.scenario["cassette"] = cassette
+
+
+@step("Broker in <mode> mode receives request for <protocol> <action> <target>")
+def broker_in_mode_receives_request(
+    mode: str, protocol: str, action: str, target: str
+) -> None:
+    """Send request to broker with specified mode."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    broker = Broker(cassette=cassette, mode=cast("BrokerMode", mode))
+    request = InteractionRequest(
+        protocol=protocol,
+        action=action,
+        target=target,
+        headers=(),
         body=b"test-data",
     )
     try:

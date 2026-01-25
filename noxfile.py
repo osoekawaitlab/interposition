@@ -18,6 +18,7 @@ def tests_unit(session: nox.Session) -> None:
 def tests_e2e(session: nox.Session) -> None:
     """Run E2E tests only."""
     session.install("-e", ".", "--group=dev")
+    session.run("gauge", "validate", "e2e/specs")
     session.run("gauge", "run", "e2e/specs")
 
 

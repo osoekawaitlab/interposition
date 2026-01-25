@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from interposition.errors import InteractionNotFoundError
 
@@ -11,26 +11,36 @@ if TYPE_CHECKING:
 
     from interposition.models import Cassette, InteractionRequest, ResponseChunk
 
+BrokerMode = Literal["replay", "record", "auto"]
+
 
 class Broker:
     """Manages interaction replay from cassettes.
 
     Attributes:
         cassette: The cassette containing recorded interactions
+        mode: The broker mode (replay, record, or auto)
     """
 
-    def __init__(self, cassette: Cassette) -> None:
+    def __init__(self, cassette: Cassette, mode: BrokerMode = "replay") -> None:
         """Initialize broker with a cassette.
 
         Args:
             cassette: The cassette containing recorded interactions
+            mode: The broker mode (replay, record, or auto)
         """
         self._cassette = cassette
+        self._mode = mode
 
     @property
     def cassette(self) -> Cassette:
         """Get the cassette."""
         return self._cassette
+
+    @property
+    def mode(self) -> BrokerMode:
+        """Get the broker mode."""
+        return self._mode
 
     def replay(self, request: InteractionRequest) -> Iterator[ResponseChunk]:
         """Replay recorded response for matching request.
