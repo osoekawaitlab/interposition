@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from interposition.errors import InteractionNotFoundError
+from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
 from interposition.models import (
     Cassette,
     ResponseChunk,
@@ -123,6 +123,28 @@ class TestBroker:
         assert chunks[0].data == b"recorded"
         assert len(broker.cassette.interactions) == 1
 
+    def test_replay_always_forwards_to_live_in_record_mode_even_on_hit(
+        self, make_interaction: MakeInteractionProtocol
+    ) -> None:
+        """Test that record mode forwards to live even when cassette has match."""
+        interaction = make_interaction(
+            response_chunks=(ResponseChunk(data=b"cached", sequence=0),)
+        )
+        cassette = Cassette(interactions=(interaction,))
+        responder_called = False
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            nonlocal responder_called
+            responder_called = True
+            return (ResponseChunk(data=b"fresh", sequence=0),)
+
+        broker = Broker(cassette=cassette, mode="record", live_responder=mock_responder)
+
+        chunks = list(broker.replay(interaction.request))
+
+        assert responder_called is True
+        assert chunks[0].data == b"fresh"
+
     def test_replay_raises_when_live_responder_missing_in_auto_mode(
         self, make_request: MakeRequestProtocol
     ) -> None:
@@ -132,6 +154,17 @@ class TestBroker:
         broker = Broker(cassette=cassette, mode="auto")
 
         with pytest.raises(InteractionNotFoundError, match="No matching interaction"):
+            list(broker.replay(request))
+
+    def test_replay_raises_when_live_responder_missing_in_record_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that record mode raises without live responder."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+        broker = Broker(cassette=cassette, mode="record")
+
+        with pytest.raises(LiveResponderRequiredError, match="record mode"):
             list(broker.replay(request))
 
     def test_replay_returns_chunks_for_matching_request(

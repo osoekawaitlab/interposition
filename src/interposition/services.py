@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable
 from typing import TYPE_CHECKING, Literal
 
-from interposition.errors import InteractionNotFoundError
+from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
 from interposition.models import Cassette, Interaction
 
 if TYPE_CHECKING:
@@ -69,26 +69,51 @@ class Broker:
 
         Raises:
             InteractionNotFoundError: When no matching interaction exists
-                and mode is replay, or when mode is auto/record but no
+                and mode is replay, or when mode is auto but no
+                live_responder is configured.
+            LiveResponderRequiredError: When mode is record but no
                 live_responder is configured.
         """
-        fingerprint = request.fingerprint()
-        interaction = self.cassette.find_interaction(fingerprint)
+        # record mode: always forward to live, ignore cassette
+        if self._mode == "record":
+            yield from self._forward_and_record(request)
+            return
 
+        # replay/auto mode: try cassette first
+        interaction = self.cassette.find_interaction(request.fingerprint())
         if interaction is not None:
             yield from interaction.response_chunks
             return
 
-        # MISS: handle based on mode
+        # MISS handling
         if self._mode == "replay":
             raise InteractionNotFoundError(request)
 
-        # auto or record mode: forward to live responder
+        # auto mode MISS: forward to live
+        yield from self._forward_and_record(request)
+
+    def _forward_and_record(
+        self, request: InteractionRequest
+    ) -> Iterator[ResponseChunk]:
+        """Forward request to live responder and record the interaction.
+
+        Args:
+            request: The request to forward
+
+        Yields:
+            ResponseChunks from live responder
+
+        Raises:
+            LiveResponderRequiredError: When live_responder is not configured
+                and mode is record.
+            InteractionNotFoundError: When live_responder is not configured
+                and mode is auto.
+        """
         if self._live_responder is None:
+            if self._mode == "record":
+                raise LiveResponderRequiredError(self._mode)
             raise InteractionNotFoundError(request)
 
-        # Collect chunks from live responder before yielding to ensure recording
-        # completes even if the consumer stops early.
         chunks = tuple(self._live_responder(request))
         self._record_interaction(request, chunks)
         yield from chunks

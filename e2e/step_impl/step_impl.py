@@ -322,6 +322,18 @@ def configure_mock_live_responder(response_data: str) -> None:
     data_store.scenario["live_responder"] = mock_responder
 
 
+@step("Configure tracking live responder returning <response_data>")
+def configure_tracking_live_responder(response_data: str) -> None:
+    """Configure a live responder that records whether it was called."""
+    data_store.scenario["live_responder_called"] = False
+
+    def tracking_responder(_request: InteractionRequest) -> tuple[ResponseChunk, ...]:
+        data_store.scenario["live_responder_called"] = True
+        return (ResponseChunk(data=response_data.encode(), sequence=0),)
+
+    data_store.scenario["live_responder"] = tracking_responder
+
+
 @step("Response stream should contain <expected_data>")
 def response_stream_should_contain(expected_data: str) -> None:
     """Verify response stream contains expected data."""
@@ -343,3 +355,17 @@ def cassette_should_contain_one_interaction() -> None:
     assert len(cassette.interactions) == 1, (
         f"Expected 1 interaction, got {len(cassette.interactions)}"
     )
+
+
+@step("Live responder should not be called")
+def live_responder_should_not_be_called() -> None:
+    """Verify the live responder was not invoked."""
+    called = cast("bool", data_store.scenario.get("live_responder_called", False))
+    assert called is False, "Expected live responder not to be called"
+
+
+@step("Live responder should be called")
+def live_responder_should_be_called() -> None:
+    """Verify the live responder was invoked."""
+    called = cast("bool", data_store.scenario.get("live_responder_called", False))
+    assert called is True, "Expected live responder to be called"

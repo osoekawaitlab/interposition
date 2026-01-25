@@ -22,3 +22,16 @@ class InteractionNotFoundError(Exception):
             f"{request.action}:{request.target}"
         )
         self.request: InteractionRequest = request
+
+
+class LiveResponderRequiredError(Exception):
+    """Raised when live_responder is required but not configured."""
+
+    def __init__(self, mode: str) -> None:
+        """Initialize with the mode that requires live_responder.
+
+        Args:
+            mode: The broker mode that requires live_responder
+        """
+        super().__init__(f"live_responder is required for {mode} mode")
+        self.mode: str = mode
