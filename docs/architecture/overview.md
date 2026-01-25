@@ -65,3 +65,11 @@ Add a mode parameter to the Broker class (replay, record, auto) to determine MIS
 **Status**: Accepted | **Date**: 2026-01-25
 
 Use typing.Literal with a type alias for broker mode values instead of Enum, for simplicity and Pydantic compatibility.
+
+---
+
+### [ADR-0009: LiveResponder Port for Upstream Forwarding](../adr/0009-live-responder-port.md)
+
+**Status**: Accepted | **Date**: 2026-01-25
+
+Define LiveResponder as a callable port (`Callable[[InteractionRequest], Iterable[ResponseChunk]]`) for protocol-agnostic upstream communication.

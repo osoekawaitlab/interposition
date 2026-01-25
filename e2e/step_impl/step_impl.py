@@ -1,6 +1,6 @@
 """Step implementations for Gauge tests."""
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from getgauge.python import data_store, step
 
@@ -13,6 +13,9 @@ from interposition import (
     InteractionRequest,
     ResponseChunk,
 )
+
+if TYPE_CHECKING:
+    from interposition.services import LiveResponder
 
 # Replay functionality steps
 
@@ -283,7 +286,14 @@ def broker_in_mode_receives_request(
 ) -> None:
     """Send request to broker with specified mode."""
     cassette = cast("Cassette", data_store.scenario["cassette"])
-    broker = Broker(cassette=cassette, mode=cast("BrokerMode", mode))
+    live_responder = cast(
+        "LiveResponder | None", data_store.scenario.get("live_responder")
+    )
+    broker = Broker(
+        cassette=cassette,
+        mode=cast("BrokerMode", mode),
+        live_responder=live_responder,
+    )
     request = InteractionRequest(
         protocol=protocol,
         action=action,
@@ -295,6 +305,41 @@ def broker_in_mode_receives_request(
         chunks = list(broker.replay(request))
         data_store.scenario["response_chunks"] = chunks
         data_store.scenario["error"] = None
+        # Update cassette reference after replay (may have been modified)
+        data_store.scenario["cassette"] = broker.cassette
     except InteractionNotFoundError as e:
         data_store.scenario["response_chunks"] = None
         data_store.scenario["error"] = e
+
+
+@step("Configure mock live responder returning <response_data>")
+def configure_mock_live_responder(response_data: str) -> None:
+    """Configure a mock live responder that returns the given data."""
+
+    def mock_responder(_request: InteractionRequest) -> tuple[ResponseChunk, ...]:
+        return (ResponseChunk(data=response_data.encode(), sequence=0),)
+
+    data_store.scenario["live_responder"] = mock_responder
+
+
+@step("Response stream should contain <expected_data>")
+def response_stream_should_contain(expected_data: str) -> None:
+    """Verify response stream contains expected data."""
+    response_chunks = cast(
+        "list[ResponseChunk] | None", data_store.scenario.get("response_chunks")
+    )
+    assert response_chunks is not None, "No response chunks received"
+    actual_data = b"".join(chunk.data for chunk in response_chunks)
+    assert actual_data == expected_data.encode(), (
+        f"Expected {expected_data!r}, got {actual_data!r}"
+    )
+
+
+@step("Cassette should contain one recorded interaction")
+def cassette_should_contain_one_interaction() -> None:
+    """Verify cassette contains exactly one interaction."""
+    cassette = cast("Cassette", data_store.scenario.get("cassette"))
+    assert cassette is not None, "No cassette found"
+    assert len(cassette.interactions) == 1, (
+        f"Expected 1 interaction, got {len(cassette.interactions)}"
+    )

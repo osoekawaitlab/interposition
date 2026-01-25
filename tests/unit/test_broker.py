@@ -34,6 +34,53 @@ class TestBroker:
 
         assert broker.mode == "replay"
 
+    def test_creates_with_live_responder(self) -> None:
+        """Test that Broker can be created with a live_responder."""
+        cassette = Cassette(interactions=())
+
+        def mock_responder(_request: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"response", sequence=0),)
+
+        broker = Broker(cassette=cassette, live_responder=mock_responder)
+
+        assert broker.live_responder is mock_responder
+
+    def test_replay_forwards_to_live_responder_on_miss_in_auto_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that auto mode forwards MISS to live_responder."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"live-response", sequence=0),)
+
+        broker = Broker(cassette=cassette, mode="auto", live_responder=mock_responder)
+
+        chunks = list(broker.replay(request))
+
+        assert len(chunks) == 1
+        assert chunks[0].data == b"live-response"
+
+    def test_replay_records_interaction_on_miss_in_auto_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that auto mode records interaction to cassette on MISS."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"live-response", sequence=0),)
+
+        broker = Broker(cassette=cassette, mode="auto", live_responder=mock_responder)
+
+        list(broker.replay(request))
+
+        assert len(broker.cassette.interactions) == 1
+        recorded = broker.cassette.interactions[0]
+        assert recorded.request == request
+        assert recorded.response_chunks[0].data == b"live-response"
+
     def test_replay_returns_chunks_for_matching_request(
         self, make_interaction: MakeInteractionProtocol
     ) -> None:
