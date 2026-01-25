@@ -36,3 +36,12 @@
 * Broker in "record" mode receives request for "test-proto" "fetch" "resource-123"
 * Live responder should be called
 * Response stream should contain "fresh-live-data"
+
+## Recorded cassette can be serialized and replayed
+
+* Create empty cassette
+* Configure mock live responder returning "recorded-data"
+* Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"
+* Serialize and deserialize cassette
+* Broker in "replay" mode receives request for "test-proto" "fetch" "resource-123"
+* Response stream should contain "recorded-data"

@@ -369,3 +369,12 @@ def live_responder_should_be_called() -> None:
     """Verify the live responder was invoked."""
     called = cast("bool", data_store.scenario.get("live_responder_called", False))
     assert called is True, "Expected live responder to be called"
+
+
+@step("Serialize and deserialize cassette")
+def serialize_and_deserialize_cassette() -> None:
+    """Serialize cassette to JSON and deserialize back."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    json_str = cassette.model_dump_json()
+    new_cassette = Cassette.model_validate_json(json_str)
+    data_store.scenario["cassette"] = new_cassette
