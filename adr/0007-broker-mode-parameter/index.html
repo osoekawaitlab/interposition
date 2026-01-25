@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0000-adr-template/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0007-broker-mode-parameter/">
       
       
-        <link rel="prev" href="../../architecture/overview/">
+        <link rel="prev" href="../0006-external-adapters/">
       
       
-        <link rel="next" href="../0001-pydantic-for-data-models/">
+        <link rel="next" href="../0008-literal-type-for-broker-mode/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here - interposition</title>
+        <title>ADR 0007: Broker Mode Parameter for Record Functionality - interposition</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here" class="md-skip">
+        <a href="#adr-0007-broker-mode-parameter-for-record-functionality" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
+              ADR 0007: Broker Mode Parameter for Record Functionality
             
           </span>
         </div>
@@ -636,37 +636,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0000-adr-template/" class="md-nav__link">
         
   
   
@@ -682,153 +655,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Date
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rationale
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implications
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#positive-implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Positive Implications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concerns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Concerns
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#future-direction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Future Direction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1006,10 +832,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0007-broker-mode-parameter/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0007: Broker Mode Parameter for Record Functionality
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1025,6 +878,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rationale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#separate-classes-replaybroker-recordbroker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate Classes (ReplayBroker, RecordBroker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Direction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1285,6 +1324,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#separate-classes-replaybroker-recordbroker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate Classes (ReplayBroker, RecordBroker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1329,47 +1407,74 @@
   
 
 
-<h1 id="adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here">ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here<a class="headerlink" href="#adr-0000-this-is-adr-template-and-short-title-of-the-architectural-decision-goes-here" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0007-broker-mode-parameter-for-record-functionality">ADR 0007: Broker Mode Parameter for Record Functionality<a class="headerlink" href="#adr-0007-broker-mode-parameter-for-record-functionality" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<p>[Proposed | Accepted | Deprecated | Superseded]</p>
-<!-- If superseded, include a reference to the new ADR -->
-
+<p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>YYYY-MM-DD</p>
+<p>2026-01-25</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Describe the context and problem statement. What is the architectural challenge that needs to be addressed? Include any relevant constraints or requirements that influenced the decision.</p>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>State the architectural decision clearly and concisely. What specific approach, technology, pattern, or solution was chosen?</p>
-<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<p>Explain the reasoning that led to this decision. Why was this particular option selected among the alternatives? Include relevant factors such as:</p>
+<p>Interposition currently supports only replay mode. The Broker looks up interactions by fingerprint and returns recorded responses. When a MISS occurs, it raises <code>InteractionNotFoundError</code>.</p>
+<p>To support recording functionality, the Broker needs to handle MISS differently depending on the intended use case:</p>
 <ul>
-<li>Technical considerations</li>
-<li>Business requirements</li>
-<li>Team capabilities</li>
-<li>Time constraints</li>
-<li>Cost implications</li>
+<li><strong>Replay mode</strong>: MISS should raise an error (current behavior).</li>
+<li><strong>Record mode</strong>: MISS should forward to a live upstream and record the response.</li>
+<li><strong>Auto mode</strong>: HIT should replay, MISS should forward and record.</li>
+</ul>
+<p>The question is how to represent this behavioral variation.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Add a <code>mode</code> parameter to the Broker class that determines MISS handling behavior.</p>
+<p>The mode is set at Broker construction time and remains constant for the lifetime of the Broker instance.</p>
+<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Single entry point</strong>: Users interact with one Broker class rather than multiple classes (ReplayBroker, RecordBroker, etc.).</li>
+<li><strong>Explicit configuration</strong>: The mode is visible in the constructor, making behavior predictable.</li>
+<li><strong>Backward compatible</strong>: Default mode is "replay", preserving existing behavior.</li>
+<li><strong>Testable</strong>: Mode can be easily switched in tests without changing other setup.</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
-<p>List the benefits and positive outcomes expected from this decision.</p>
-<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
-<p>List potential challenges, risks, or negative consequences along with possible mitigation strategies.</p>
-<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<p>Describe other options that were considered and why they were not selected. For each alternative, briefly explain:</p>
 <ul>
-<li>Key characteristics</li>
-<li>Pros and cons relative to the chosen solution</li>
-<li>Reasons for rejection</li>
+<li>Simple API: <code>Broker(cassette, mode="auto")</code>.</li>
+<li>Clear behavioral contract per mode.</li>
+<li>Easy to extend with additional modes if needed.</li>
+</ul>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Mode validation is static only; runtime validation is not enforced by default (mitigation: rely on type checking and clear documentation).</li>
+<li>Mode affects multiple methods' behavior (mitigation: document clearly, keep logic localized).</li>
+</ul>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="separate-classes-replaybroker-recordbroker">Separate Classes (ReplayBroker, RecordBroker)<a class="headerlink" href="#separate-classes-replaybroker-recordbroker" title="Permanent link">&para;</a></h3>
+<p>Create distinct classes for each mode.</p>
+<ul>
+<li><strong>Pros</strong>: Single Responsibility Principle, no conditional logic.</li>
+<li><strong>Cons</strong>: Code duplication, users must choose correct class, harder to switch modes.</li>
+<li><strong>Reason for rejection</strong>: The core logic (fingerprinting, cassette lookup) is shared across modes. Separate classes would duplicate this logic.</li>
+</ul>
+<h3 id="method-parameter">Method Parameter<a class="headerlink" href="#method-parameter" title="Permanent link">&para;</a></h3>
+<p>Pass mode to each method call: <code>broker.handle(request, mode="record")</code>.</p>
+<ul>
+<li><strong>Pros</strong>: Flexible per-request behavior.</li>
+<li><strong>Cons</strong>: Verbose, error-prone, inconsistent behavior within same broker instance.</li>
+<li><strong>Reason for rejection</strong>: Mode should be a broker-level concern, not a per-request concern.</li>
+</ul>
+<h3 id="strategy-pattern">Strategy Pattern<a class="headerlink" href="#strategy-pattern" title="Permanent link">&para;</a></h3>
+<p>Inject a mode strategy object into Broker.</p>
+<ul>
+<li><strong>Pros</strong>: Extensible, testable strategies.</li>
+<li><strong>Cons</strong>: Over-engineered for three simple modes, additional abstraction layer.</li>
+<li><strong>Reason for rejection</strong>: Premature abstraction. A simple parameter suffices for the current requirements.</li>
 </ul>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<p>Outline any follow-up actions, future considerations, or potential changes that might be necessary as a result of this decision. Include potential triggers for revisiting this decision.</p>
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p>List any relevant documents, articles, books, or other resources that supported this decision:</p>
+<p>Revisit if:</p>
 <ul>
-<li>Links to relevant documentation</li>
-<li>Research materials</li>
-<li>Benchmarks or performance data</li>
-<li>Team discussions or meeting notes</li>
+<li>Modes require significantly different initialization (e.g., different dependencies).</li>
+<li>Per-request mode switching becomes a requirement.</li>
+<li>The number of modes grows beyond what a simple parameter can handle.</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Issue #5: Record mode feature request</li>
 </ul>
 
 
