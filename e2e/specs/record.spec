@@ -27,6 +27,7 @@
 * Create cassette with recorded interaction for "test-proto" "fetch" "resource-123"
 * Configure tracking live responder returning "live-response-data"
 * Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"
+* Response stream should contain recorded chunks in order
 * Live responder should not be called
 
 ## Broker always forwards to live in record mode even on HIT
