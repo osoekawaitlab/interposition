@@ -16,6 +16,7 @@ Instead, it provides a **pure logic engine** for storage, matching, and replay. 
 - **Serializable**: Built-in JSON/YAML serialization for cassette persistence
 - **Memory-efficient**: O(1) lookup with fingerprint indexing
 - **Streaming**: Generator-based response delivery
+- **Multi-mode**: Supports replay, record, and auto modes
 
 ## Architecture
 
@@ -173,9 +174,99 @@ for chunk in broker.replay(request):
     print(f"Received chunk: {len(chunk.data)} bytes")
 ```
 
+### Broker Modes
+
+The `Broker` supports three modes via the `mode` parameter:
+
+| Mode | Behavior |
+|------|----------|
+| `replay` | Default. Returns recorded responses only. Raises `InteractionNotFoundError` on cache miss. |
+| `record` | Always forwards to live responder and records. Ignores existing cassette entries. |
+| `auto` | Returns recorded response if available; otherwise forwards to live and records. |
+
+The `BrokerMode` type alias is available for type hints:
+
+```python
+from interposition import BrokerMode
+
+mode: BrokerMode = "auto"
+```
+
+### Live Responder
+
+For `record` and `auto` modes, you must provide a `live_responder` callable that forwards requests to your actual backend:
+
+```python
+from interposition import (
+    Broker,
+    Cassette,
+    InteractionRequest,
+    ResponseChunk,
+)
+from collections.abc import Iterable
+
+def my_live_responder(request: InteractionRequest) -> Iterable[ResponseChunk]:
+    """Forward request to actual backend and yield response chunks."""
+    # Your actual implementation here
+    response = your_http_client.request(
+        method=request.action,
+        url=request.target,
+        headers=dict(request.headers),
+        data=request.body,
+    )
+    yield ResponseChunk(data=response.content, sequence=0)
+```
+
+The `LiveResponder` type alias is available:
+
+```python
+from interposition.services import LiveResponder
+```
+
+### Record Mode
+
+Use `record` mode to capture new interactions:
+
+```python
+# Start with empty cassette
+cassette = Cassette(interactions=())
+
+broker = Broker(
+    cassette=cassette,
+    mode="record",
+    live_responder=my_live_responder,
+)
+
+# All requests are forwarded and recorded
+response = list(broker.replay(request))
+
+# Save the updated cassette
+with open("cassette.json", "w") as f:
+    f.write(broker.cassette.model_dump_json(indent=2))
+```
+
+### Auto Mode
+
+Use `auto` mode for hybrid workflows (replay if available, record if not):
+
+```python
+# Load existing cassette (may be empty or partial)
+with open("cassette.json") as f:
+    cassette = Cassette.model_validate_json(f.read())
+
+broker = Broker(
+    cassette=cassette,
+    mode="auto",
+    live_responder=my_live_responder,
+)
+
+# Returns recorded response if exists, otherwise forwards and records
+response = list(broker.replay(request))
+```
+
 ### Error Handling
 
-If a matching interaction is not found, the broker raises `InteractionNotFoundError`:
+**InteractionNotFoundError**: Raised when no matching interaction exists (in `replay` mode) or when `auto` mode has a cache miss without a configured `live_responder`:
 
 ```python
 from interposition import InteractionNotFoundError
@@ -184,6 +275,19 @@ try:
     broker.replay(unknown_request)
 except InteractionNotFoundError as e:
     print(f"Not recorded: {e.request.target}")
+```
+
+**LiveResponderRequiredError**: Raised when `record` mode is used without a `live_responder`:
+
+```python
+from interposition import LiveResponderRequiredError
+
+broker = Broker(cassette=cassette, mode="record")  # No live_responder!
+
+try:
+    broker.replay(request)
+except LiveResponderRequiredError as e:
+    print(f"live_responder required for {e.mode} mode")
 ```
 
 ## Development
