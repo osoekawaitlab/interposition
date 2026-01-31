@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (Amended 2026-01-30)
 
 ## Date
 
@@ -80,3 +80,27 @@ Revisit if:
 
 - ADR 0007: Broker Mode Parameter for Record Functionality
 - ADR 0009: LiveResponder Port for Upstream Forwarding
+
+## Amendment (2026-01-30)
+
+### What Changed
+
+Corrected the earlier MISS-only framing. Buffering applies whenever forwarding
+occurs in record/auto mode, not only on MISS.
+
+### Reason for Amendment
+
+The original text framed buffering as MISS-only, which is incorrect for record
+mode (always forward). Buffering must apply to any forward path to preserve
+recording integrity.
+
+### Impact on Original ADR
+
+**Unchanged:**
+
+- Buffering is required before recording and returning responses.
+- Trade-offs (memory/latency) remain the same.
+
+**Changed:**
+
+- The trigger condition is "any forward" rather than "MISS only."
