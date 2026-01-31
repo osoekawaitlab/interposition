@@ -264,6 +264,58 @@ broker = Broker(
 response = list(broker.replay(request))
 ```
 
+### Cassette Store
+
+For automatic cassette persistence during recording, use a `CassetteStore`. The `CassetteStore` protocol defines a simple interface for loading and saving cassettes:
+
+```python
+from interposition import CassetteStore
+
+class MyCassetteStore:
+    """Custom store implementation."""
+
+    def load(self) -> Cassette:
+        """Load cassette from storage."""
+        ...
+
+    def save(self, cassette: Cassette) -> None:
+        """Save cassette to storage."""
+        ...
+```
+
+When a `cassette_store` is provided to the `Broker`, it automatically saves the cassette after each recorded interaction.
+
+### JsonFileCassetteStore
+
+A built-in file-based cassette store using JSON format:
+
+```python
+from pathlib import Path
+from interposition import Broker, Cassette, JsonFileCassetteStore
+
+# Create store pointing to a JSON file
+store = JsonFileCassetteStore(Path("cassettes/my_test.json"))
+
+# Load existing cassette (raises FileNotFoundError if not exists)
+cassette = store.load()
+
+# Or start with empty cassette
+cassette = Cassette(interactions=())
+
+# Create broker with automatic persistence
+broker = Broker(
+    cassette=cassette,
+    mode="record",
+    live_responder=my_live_responder,
+    cassette_store=store,  # Auto-saves after each recording
+)
+
+# After replay, cassette is automatically saved to file
+response = list(broker.replay(request))
+```
+
+The `JsonFileCassetteStore` creates parent directories automatically when saving.
+
 ### Error Handling
 
 **InteractionNotFoundError**: Raised when no matching interaction exists (in `replay` mode) or when `auto` mode has a cache miss without a configured `live_responder`:
@@ -288,6 +340,32 @@ try:
     broker.replay(request)
 except LiveResponderRequiredError as e:
     print(f"live_responder required for {e.mode} mode")
+```
+
+**InteractionValidationError**: Raised when an `Interaction` fails validation (e.g., fingerprint mismatch or invalid response chunk sequence):
+
+```python
+from interposition import Interaction, InteractionValidationError
+
+try:
+    # This will fail: fingerprint doesn't match request
+    interaction = Interaction(
+        request=request,
+        fingerprint=wrong_fingerprint,  # Mismatch!
+        response_chunks=chunks,
+    )
+except InteractionValidationError as e:
+    print(f"Validation failed: {e}")
+```
+
+## Version
+
+Access the package version programmatically:
+
+```python
+from interposition import __version__
+
+print(__version__)  # e.g., "0.2.0"
 ```
 
 ## Development
