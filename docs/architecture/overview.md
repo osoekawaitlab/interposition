@@ -56,7 +56,7 @@ Keep protocol-specific adapters external to the core package. Users implement ad
 
 **Status**: Accepted | **Date**: 2026-01-25
 
-Add a mode parameter to the Broker class (replay, record, auto) to determine MISS handling behavior, enabling record functionality.
+Add a mode parameter to the Broker class (replay, record, auto) to determine replay vs. live-forward behavior, enabling record functionality.
 
 ---
 
@@ -80,4 +80,12 @@ Define LiveResponder as a callable port (`Callable[[InteractionRequest], Iterabl
 
 **Status**: Accepted | **Date**: 2026-01-25
 
-In record/auto mode on a MISS, fully collect live response chunks before returning any data, then record and return the buffered response.
+When forwarding in record/auto mode, fully collect live response chunks before returning any data, then record and return the buffered response.
+
+---
+
+### [ADR-0011: CassetteStore Persistence Port](../adr/0011-cassette-store-persistence-port.md)
+
+**Status**: Accepted | **Date**: 2026-01-30
+
+Define CassetteStore as a Protocol port with load() and save() methods for storage-agnostic cassette persistence with automatic save on record.
