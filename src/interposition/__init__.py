@@ -7,6 +7,7 @@ from interposition._version import __version__
 from interposition.errors import (
     CassetteSaveError,
     InteractionNotFoundError,
+    InterpositionError,
     LiveResponderRequiredError,
 )
 from interposition.models import (
@@ -30,6 +31,7 @@ __all__ = [
     "InteractionNotFoundError",
     "InteractionRequest",
     "InteractionValidationError",
+    "InterpositionError",
     "JsonFileCassetteStore",
     "LiveResponderRequiredError",
     "RequestFingerprint",

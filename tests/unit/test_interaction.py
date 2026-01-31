@@ -7,7 +7,13 @@ from typing import TYPE_CHECKING
 import pytest
 from pydantic import ValidationError
 
-from interposition.models import Interaction, InteractionRequest, ResponseChunk
+from interposition.errors import InterpositionError
+from interposition.models import (
+    Interaction,
+    InteractionRequest,
+    InteractionValidationError,
+    ResponseChunk,
+)
 
 if TYPE_CHECKING:
     from tests.unit.conftest import MakeInteractionProtocol, MakeRequestProtocol
@@ -143,3 +149,19 @@ class TestInteraction:
         assert (
             interaction.response_chunks[last_chunk_index].sequence == last_chunk_index
         )
+
+
+class TestInteractionValidationError:
+    """Test suite for InteractionValidationError."""
+
+    def test_inherits_from_interposition_error(self) -> None:
+        """Test that InteractionValidationError inherits from InterpositionError."""
+        error = InteractionValidationError("validation failed")
+
+        assert isinstance(error, InterpositionError)
+
+    def test_inherits_from_value_error(self) -> None:
+        """Test that InteractionValidationError inherits from ValueError."""
+        error = InteractionValidationError("validation failed")
+
+        assert isinstance(error, ValueError)

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from interposition.errors import CassetteSaveError
+from interposition.errors import CassetteSaveError, InterpositionError
 from interposition.models import Cassette
 from interposition.stores import JsonFileCassetteStore
 
@@ -182,3 +182,11 @@ class TestCassetteSaveError:
         error = CassetteSaveError(path, cause)
 
         assert str(path) in str(error)
+
+    def test_inherits_from_interposition_error(self, tmp_path: Path) -> None:
+        """Test that CassetteSaveError inherits from InterpositionError."""
+        path = tmp_path / "cassette.json"
+        cause = PermissionError("denied")
+        error = CassetteSaveError(path, cause)
+
+        assert isinstance(error, InterpositionError)

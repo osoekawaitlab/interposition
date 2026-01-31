@@ -10,7 +10,11 @@ if TYPE_CHECKING:
     from interposition.models import InteractionRequest
 
 
-class InteractionNotFoundError(Exception):
+class InterpositionError(Exception):
+    """Base class for all interposition exceptions."""
+
+
+class InteractionNotFoundError(InterpositionError):
     """Raised when no matching interaction is found in cassette."""
 
     def __init__(self, request: InteractionRequest) -> None:
@@ -26,7 +30,7 @@ class InteractionNotFoundError(Exception):
         self.request: InteractionRequest = request
 
 
-class LiveResponderRequiredError(Exception):
+class LiveResponderRequiredError(InterpositionError):
     """Raised when live_responder is required but not configured."""
 
     def __init__(self, mode: str) -> None:
@@ -39,7 +43,7 @@ class LiveResponderRequiredError(Exception):
         self.mode: str = mode
 
 
-class CassetteSaveError(Exception):
+class CassetteSaveError(InterpositionError):
     """Raised when cassette persistence fails."""
 
     def __init__(self, path: Path, cause: Exception) -> None:

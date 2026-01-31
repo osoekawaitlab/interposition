@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
+from interposition.errors import (
+    InteractionNotFoundError,
+    InterpositionError,
+    LiveResponderRequiredError,
+)
 from interposition.models import (
     Cassette,
     ResponseChunk,
@@ -448,3 +452,22 @@ class TestInteractionNotFoundError:
         assert "test-proto" in message
         assert "fetch" in message
         assert "resource-123" in message
+
+    def test_inherits_from_interposition_error(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that InteractionNotFoundError inherits from InterpositionError."""
+        request = make_request()
+        error = InteractionNotFoundError(request)
+
+        assert isinstance(error, InterpositionError)
+
+
+class TestLiveResponderRequiredError:
+    """Test suite for LiveResponderRequiredError."""
+
+    def test_inherits_from_interposition_error(self) -> None:
+        """Test that LiveResponderRequiredError inherits from InterpositionError."""
+        error = LiveResponderRequiredError("record")
+
+        assert isinstance(error, InterpositionError)
