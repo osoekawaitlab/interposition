@@ -19,6 +19,7 @@ This page documents the public API of the interposition library.
         - CassetteSaveError
         - InteractionNotFoundError
         - InteractionValidationError
+        - InterpositionError
         - LiveResponderRequiredError
 
 ## Services
@@ -82,6 +83,13 @@ This page documents the public API of the interposition library.
       heading_level: 4
 
 ## Exceptions
+
+### InterpositionError
+
+::: interposition.errors.InterpositionError
+    options:
+      show_root_heading: false
+      heading_level: 4
 
 ### CassetteSaveError
 

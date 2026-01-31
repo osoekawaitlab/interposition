@@ -318,6 +318,17 @@ The `JsonFileCassetteStore` creates parent directories automatically when saving
 
 ### Error Handling
 
+All interposition exceptions inherit from `InterpositionError`, allowing you to catch all domain errors with a single handler:
+
+```python
+from interposition import InterpositionError
+
+try:
+    broker.replay(request)
+except InterpositionError as e:
+    print(f"Interposition error: {e}")
+```
+
 **InteractionNotFoundError**: Raised when no matching interaction exists (in `replay` mode) or when `auto` mode has a cache miss without a configured `live_responder`:
 
 ```python
