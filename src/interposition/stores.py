@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from interposition.errors import CassetteSaveError
 from interposition.models import Cassette
 
 if TYPE_CHECKING:
@@ -50,7 +51,13 @@ class JsonFileCassetteStore:
 
         Args:
             cassette: The cassette to persist.
+
+        Raises:
+            CassetteSaveError: If file write fails.
         """
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-        json_str = cassette.model_dump_json(indent=2)
-        self._path.write_text(json_str, encoding="utf-8")
+        try:
+            self._path.parent.mkdir(parents=True, exist_ok=True)
+            json_str = cassette.model_dump_json(indent=2)
+            self._path.write_text(json_str, encoding="utf-8")
+        except OSError as e:
+            raise CassetteSaveError(self._path, e) from e

@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from interposition.errors import CassetteSaveError
 from interposition.models import Cassette
 from interposition.stores import JsonFileCassetteStore
 
@@ -128,3 +129,56 @@ class TestJsonFileCassetteStore:
         found = loaded.find_interaction(interaction.fingerprint)
         assert found is not None
         assert found.request == interaction.request
+
+    def test_save_raises_cassette_save_error_on_write_failure(
+        self, tmp_path: Path
+    ) -> None:
+        """Test that save raises CassetteSaveError when write fails."""
+        # Use existing directory as file path - can't write file to directory
+        path = tmp_path
+        store = JsonFileCassetteStore(path)
+        cassette = Cassette(interactions=())
+
+        with pytest.raises(CassetteSaveError) as exc_info:
+            store.save(cassette)
+
+        assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, OSError)
+
+    def test_cassette_save_error_message_includes_path(self, tmp_path: Path) -> None:
+        """Test that CassetteSaveError message includes the file path."""
+        # Use existing directory as file path - can't write file to directory
+        path = tmp_path
+        store = JsonFileCassetteStore(path)
+        cassette = Cassette(interactions=())
+
+        with pytest.raises(CassetteSaveError, match=str(path)):
+            store.save(cassette)
+
+
+class TestCassetteSaveError:
+    """Test suite for CassetteSaveError."""
+
+    def test_stores_path(self, tmp_path: Path) -> None:
+        """Test that exception stores the path."""
+        path = tmp_path / "cassette.json"
+        cause = PermissionError("denied")
+        error = CassetteSaveError(path, cause)
+
+        assert error.path == path
+
+    def test_stores_cause(self, tmp_path: Path) -> None:
+        """Test that exception stores the original cause."""
+        path = tmp_path / "cassette.json"
+        cause = PermissionError("denied")
+        error = CassetteSaveError(path, cause)
+
+        assert error.__cause__ is cause
+
+    def test_error_message_includes_path(self, tmp_path: Path) -> None:
+        """Test that error message includes the file path."""
+        path = tmp_path / "cassette.json"
+        cause = PermissionError("denied")
+        error = CassetteSaveError(path, cause)
+
+        assert str(path) in str(error)

@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from interposition.models import InteractionRequest
 
 
@@ -35,3 +37,18 @@ class LiveResponderRequiredError(Exception):
         """
         super().__init__(f"live_responder is required for {mode} mode")
         self.mode: str = mode
+
+
+class CassetteSaveError(Exception):
+    """Raised when cassette persistence fails."""
+
+    def __init__(self, path: Path, cause: Exception) -> None:
+        """Initialize with the path and underlying cause.
+
+        Args:
+            path: The file path where save failed
+            cause: The underlying exception that caused the failure
+        """
+        super().__init__(f"Failed to save cassette to {path}: {cause}")
+        self.path: Path = path
+        self.__cause__ = cause
