@@ -89,3 +89,11 @@ When forwarding in record/auto mode, fully collect live response chunks before r
 **Status**: Accepted | **Date**: 2026-01-30
 
 Define CassetteStore as a Protocol port with load() and save() methods for storage-agnostic cassette persistence with automatic save on record.
+
+---
+
+### [ADR-0012: Cassette Save Failure Behavior](../adr/0012-cassette-save-failure-behavior.md)
+
+**Status**: Accepted | **Date**: 2026-01-31
+
+Define fail-fast behavior when cassette persistence fails (save errors are propagated and response streaming stops).

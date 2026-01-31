@@ -315,6 +315,7 @@ response = list(broker.replay(request))
 ```
 
 The `JsonFileCassetteStore` creates parent directories automatically when saving.
+If saving fails, the error is propagated and response streaming stops (fail-fast).
 
 ### Error Handling
 
