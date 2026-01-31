@@ -16,6 +16,7 @@ This page documents the public API of the interposition library.
         - JsonFileCassetteStore
         - ResponseChunk
         - RequestFingerprint
+        - CassetteSaveError
         - InteractionNotFoundError
         - InteractionValidationError
         - LiveResponderRequiredError
@@ -81,6 +82,13 @@ This page documents the public API of the interposition library.
       heading_level: 4
 
 ## Exceptions
+
+### CassetteSaveError
+
+::: interposition.errors.CassetteSaveError
+    options:
+      show_root_heading: false
+      heading_level: 4
 
 ### InteractionNotFoundError
 

@@ -358,6 +358,19 @@ except InteractionValidationError as e:
     print(f"Validation failed: {e}")
 ```
 
+**CassetteSaveError**: Raised when `JsonFileCassetteStore.save()` fails due to I/O errors (permission denied, disk full, etc.):
+
+```python
+from interposition import CassetteSaveError, JsonFileCassetteStore
+
+store = JsonFileCassetteStore(Path("/readonly/cassette.json"))
+
+try:
+    store.save(cassette)
+except CassetteSaveError as e:
+    print(f"Failed to save to {e.path}: {e.__cause__}")
+```
+
 ## Version
 
 Access the package version programmatically:
