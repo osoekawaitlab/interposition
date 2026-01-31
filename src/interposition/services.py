@@ -29,9 +29,6 @@ class CassetteStore(Protocol):
 
         Returns:
             The loaded Cassette instance.
-
-        Raises:
-            Implementation-specific exceptions for storage errors.
         """
         ...
 
@@ -40,9 +37,6 @@ class CassetteStore(Protocol):
 
         Args:
             cassette: The cassette to persist.
-
-        Raises:
-            Implementation-specific exceptions for storage errors.
         """
         ...
 
