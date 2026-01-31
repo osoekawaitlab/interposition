@@ -361,6 +361,7 @@ except InteractionValidationError as e:
 **CassetteSaveError**: Raised when `JsonFileCassetteStore.save()` fails due to I/O errors (permission denied, disk full, etc.):
 
 ```python
+from pathlib import Path
 from interposition import CassetteSaveError, JsonFileCassetteStore
 
 store = JsonFileCassetteStore(Path("/readonly/cassette.json"))
