@@ -13,16 +13,19 @@ from interposition.models import (
     RequestFingerprint,
     ResponseChunk,
 )
-from interposition.services import Broker, BrokerMode
+from interposition.services import Broker, BrokerMode, CassetteStore
+from interposition.stores import JsonFileCassetteStore
 
 __all__ = [
     "Broker",
     "BrokerMode",
     "Cassette",
+    "CassetteStore",
     "Interaction",
     "InteractionNotFoundError",
     "InteractionRequest",
     "InteractionValidationError",
+    "JsonFileCassetteStore",
     "LiveResponderRequiredError",
     "RequestFingerprint",
     "ResponseChunk",
