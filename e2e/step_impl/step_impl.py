@@ -1,8 +1,10 @@
 """Step implementations for Gauge tests."""
 
+import tempfile
+from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from getgauge.python import data_store, step
+from getgauge.python import after_scenario, data_store, step
 
 from interposition import (
     Broker,
@@ -11,6 +13,7 @@ from interposition import (
     Interaction,
     InteractionNotFoundError,
     InteractionRequest,
+    JsonFileCassetteStore,
     ResponseChunk,
 )
 
@@ -378,3 +381,80 @@ def serialize_and_deserialize_cassette() -> None:
     json_str = cassette.model_dump_json()
     new_cassette = Cassette.model_validate_json(json_str)
     data_store.scenario["cassette"] = new_cassette
+
+
+# Persistence functionality steps
+
+
+@step("Configure JSON file cassette store at temporary path")
+def configure_json_file_cassette_store() -> None:
+    """Configure a JSON file cassette store at a temporary path."""
+    temp_dir = tempfile.TemporaryDirectory()
+    path = Path(temp_dir.name) / "cassette.json"
+    store = JsonFileCassetteStore(path)
+    data_store.scenario["cassette_store"] = store
+    data_store.scenario["cassette_store_path"] = path
+    data_store.scenario["cassette_store_temp_dir"] = temp_dir
+
+
+@step("Storing broker in <mode> mode receives request for <protocol> <action> <target>")
+def broker_in_mode_with_store_receives_request(
+    mode: str, protocol: str, action: str, target: str
+) -> None:
+    """Send request to broker with cassette store."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    live_responder = cast(
+        "LiveResponder | None", data_store.scenario.get("live_responder")
+    )
+    cassette_store = cast(
+        "JsonFileCassetteStore", data_store.scenario["cassette_store"]
+    )
+    broker = Broker(
+        cassette=cassette,
+        mode=cast("BrokerMode", mode),
+        live_responder=live_responder,
+        cassette_store=cassette_store,
+    )
+    request = InteractionRequest(
+        protocol=protocol,
+        action=action,
+        target=target,
+        headers=(),
+        body=b"test-data",
+    )
+    try:
+        chunks = list(broker.replay(request))
+        data_store.scenario["response_chunks"] = chunks
+        data_store.scenario["error"] = None
+        data_store.scenario["cassette"] = broker.cassette
+    except InteractionNotFoundError as e:
+        data_store.scenario["response_chunks"] = None
+        data_store.scenario["error"] = e
+
+
+@step("Cassette file should exist at configured path")
+def cassette_file_should_exist() -> None:
+    """Verify that the cassette file exists."""
+    path = cast("Path", data_store.scenario["cassette_store_path"])
+    assert path.exists(), f"Cassette file not found at {path}"
+
+
+@step("Load cassette from file store")
+def load_cassette_from_file_store() -> None:
+    """Load cassette from the configured file store."""
+    store = cast("JsonFileCassetteStore", data_store.scenario["cassette_store"])
+    cassette = store.load()
+    data_store.scenario["cassette"] = cassette
+
+
+@after_scenario
+def cleanup_cassette_store_tmp() -> None:
+    """Clean up temporary cassette store directory after each scenario."""
+    temp_dir = cast(
+        "tempfile.TemporaryDirectory[str] | None",
+        data_store.scenario.get("cassette_store_temp_dir"),
+    )
+    if temp_dir is None:
+        return
+    temp_dir.cleanup()
+    data_store.scenario.pop("cassette_store_temp_dir", None)
