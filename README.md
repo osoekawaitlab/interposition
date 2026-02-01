@@ -391,7 +391,10 @@ Access the package version programmatically:
 ```python
 from interposition import __version__
 
-print(__version__)  # e.g., "0.2.0"
+if __version__ < "0.2.0":
+    print("Auto mode is not supported")
+else:
+    print("Auto mode is supported")
 ```
 
 ## Development
