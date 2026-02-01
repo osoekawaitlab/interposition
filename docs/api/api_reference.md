@@ -10,12 +10,16 @@ This page documents the public API of the interposition library.
         - Broker
         - BrokerMode
         - Cassette
+        - CassetteStore
         - Interaction
         - InteractionRequest
+        - JsonFileCassetteStore
         - ResponseChunk
         - RequestFingerprint
+        - CassetteSaveError
         - InteractionNotFoundError
         - InteractionValidationError
+        - InterpositionError
         - LiveResponderRequiredError
 
 ## Services
@@ -24,6 +28,22 @@ This page documents the public API of the interposition library.
     options:
       show_root_heading: true
       heading_level: 3
+
+### CassetteStore
+
+::: interposition.services.CassetteStore
+    options:
+      show_root_heading: false
+      heading_level: 4
+
+## Stores
+
+### JsonFileCassetteStore
+
+::: interposition.stores.JsonFileCassetteStore
+    options:
+      show_root_heading: false
+      heading_level: 4
 
 ## Models
 
@@ -63,6 +83,20 @@ This page documents the public API of the interposition library.
       heading_level: 4
 
 ## Exceptions
+
+### InterpositionError
+
+::: interposition.errors.InterpositionError
+    options:
+      show_root_heading: false
+      heading_level: 4
+
+### CassetteSaveError
+
+::: interposition.errors.CassetteSaveError
+    options:
+      show_root_heading: false
+      heading_level: 4
 
 ### InteractionNotFoundError
 

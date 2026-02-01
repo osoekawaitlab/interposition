@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (Amended 2026-01-30)
 
 ## Date
 
@@ -73,3 +73,27 @@ Revisit if:
 
 - ADR 0006: External Protocol Adapters Strategy
 - ADR 0007: Broker Mode Parameter for Record Functionality
+
+## Amendment (2026-01-30)
+
+### What Changed
+
+Corrected an earlier ambiguous description of when forwarding occurs. Record
+mode always forwards to live, while auto mode forwards only on MISS.
+
+### Reason for Amendment
+
+The original text described forwarding only on MISS for both modes, which does
+not match the finalized record-mode behavior. The port definition remains
+unchanged; the clarification is about forwarding conditions.
+
+### Impact on Original ADR
+
+**Unchanged:**
+
+- LiveResponder remains a callable port with the same signature.
+- Broker accepts an optional live_responder.
+
+**Changed:**
+
+- Forwarding conditions are now explicitly tied to record vs. auto mode.

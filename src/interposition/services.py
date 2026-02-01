@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
 from interposition.models import Cassette, Interaction
@@ -17,6 +17,30 @@ BrokerMode = Literal["replay", "record", "auto"]
 LiveResponder = Callable[["InteractionRequest"], "Iterable[ResponseChunk]"]
 
 
+class CassetteStore(Protocol):
+    """Port for cassette persistence operations.
+
+    Implementations handle loading and saving cassettes to storage.
+    The Broker calls save() automatically after recording new interactions.
+    """
+
+    def load(self) -> Cassette:
+        """Load cassette from storage.
+
+        Returns:
+            The loaded Cassette instance.
+        """
+        ...
+
+    def save(self, cassette: Cassette) -> None:
+        """Save cassette to storage.
+
+        Args:
+            cassette: The cassette to persist.
+        """
+        ...
+
+
 class Broker:
     """Manages interaction replay from cassettes.
 
@@ -24,6 +48,7 @@ class Broker:
         cassette: The cassette containing recorded interactions
         mode: The broker mode (replay, record, or auto)
         live_responder: Optional callable for upstream forwarding
+        cassette_store: Optional store for cassette persistence
     """
 
     def __init__(
@@ -31,6 +56,7 @@ class Broker:
         cassette: Cassette,
         mode: BrokerMode = "replay",
         live_responder: LiveResponder | None = None,
+        cassette_store: CassetteStore | None = None,
     ) -> None:
         """Initialize broker with a cassette.
 
@@ -38,10 +64,12 @@ class Broker:
             cassette: The cassette containing recorded interactions
             mode: The broker mode (replay, record, or auto)
             live_responder: Optional callable for upstream forwarding
+            cassette_store: Optional store for automatic cassette persistence
         """
         self._cassette = cassette
         self._mode = mode
         self._live_responder = live_responder
+        self._cassette_store = cassette_store
 
     @property
     def cassette(self) -> Cassette:
@@ -57,6 +85,11 @@ class Broker:
     def live_responder(self) -> LiveResponder | None:
         """Get the live responder."""
         return self._live_responder
+
+    @property
+    def cassette_store(self) -> CassetteStore | None:
+        """Get the cassette store."""
+        return self._cassette_store
 
     def replay(self, request: InteractionRequest) -> Iterator[ResponseChunk]:
         """Replay recorded response for matching request.
@@ -116,6 +149,8 @@ class Broker:
 
         chunks = tuple(self._live_responder(request))
         self._record_interaction(request, chunks)
+        if self._cassette_store is not None:
+            self._cassette_store.save(self._cassette)
         yield from chunks
 
     def _record_interaction(

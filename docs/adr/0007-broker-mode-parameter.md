@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (Amended 2026-01-30)
 
 ## Date
 
@@ -83,3 +83,28 @@ Revisit if:
 ## References
 
 - Issue #5: Record mode feature request
+
+## Amendment (2026-01-30)
+
+### What Changed
+
+Corrected the earlier MISS-only phrasing for record mode. Record mode always
+forwards to live and records, even on HIT, to distinguish it from auto mode.
+
+### Reason for Amendment
+
+The original text implied record mode only forwarded on MISS, which conflicts
+with the implemented behavior. Record mode is a forced-refresh workflow, while
+auto mode remains cache-friendly.
+
+### Impact on Original ADR
+
+**Unchanged:**
+
+- Broker has a mode parameter with replay/record/auto values.
+- auto mode replays on HIT and forwards on MISS.
+- replay mode raises on MISS.
+
+**Changed:**
+
+- record mode is explicitly defined as always forwarding and recording.

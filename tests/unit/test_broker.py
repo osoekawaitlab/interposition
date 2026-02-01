@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
+from interposition.errors import (
+    InteractionNotFoundError,
+    InterpositionError,
+    LiveResponderRequiredError,
+)
 from interposition.models import (
     Cassette,
     ResponseChunk,
@@ -256,6 +260,177 @@ class TestBroker:
         assert chunks[0].data == b"complete"
 
 
+class TestBrokerCassetteStore:
+    """Test suite for Broker with cassette_store."""
+
+    def test_creates_with_cassette_store(self) -> None:
+        """Test that Broker can be created with a cassette_store."""
+        cassette = Cassette(interactions=())
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return Cassette(interactions=())
+
+            def save(self, cassette: Cassette) -> None:
+                pass
+
+        store = MockStore()
+        broker = Broker(cassette=cassette, cassette_store=store)
+
+        assert broker.cassette_store is store
+
+    def test_cassette_store_property_returns_none_when_not_configured(self) -> None:
+        """Test that cassette_store property returns None when not set."""
+        cassette = Cassette(interactions=())
+        broker = Broker(cassette=cassette)
+
+        assert broker.cassette_store is None
+
+    def test_auto_save_called_on_miss_in_auto_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that cassette_store.save is called on MISS in auto mode."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+        save_called_with: list[Cassette] = []
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return Cassette(interactions=())
+
+            def save(self, cassette: Cassette) -> None:
+                save_called_with.append(cassette)
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"response", sequence=0),)
+
+        broker = Broker(
+            cassette=cassette,
+            mode="auto",
+            live_responder=mock_responder,
+            cassette_store=MockStore(),
+        )
+
+        list(broker.replay(request))
+
+        assert len(save_called_with) == 1
+        assert len(save_called_with[0].interactions) == 1
+
+    def test_auto_save_called_on_miss_in_record_mode(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that cassette_store.save is called on MISS in record mode."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+        save_called_with: list[Cassette] = []
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return Cassette(interactions=())
+
+            def save(self, cassette: Cassette) -> None:
+                save_called_with.append(cassette)
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"response", sequence=0),)
+
+        broker = Broker(
+            cassette=cassette,
+            mode="record",
+            live_responder=mock_responder,
+            cassette_store=MockStore(),
+        )
+
+        list(broker.replay(request))
+
+        assert len(save_called_with) == 1
+        assert len(save_called_with[0].interactions) == 1
+
+    def test_no_save_on_hit_in_auto_mode(
+        self, make_interaction: MakeInteractionProtocol
+    ) -> None:
+        """Test that cassette_store.save is NOT called on HIT in auto mode."""
+        interaction = make_interaction()
+        cassette = Cassette(interactions=(interaction,))
+        save_called = False
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return Cassette(interactions=())
+
+            def save(self, _cassette: Cassette) -> None:
+                nonlocal save_called
+                save_called = True
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"response", sequence=0),)
+
+        broker = Broker(
+            cassette=cassette,
+            mode="auto",
+            live_responder=mock_responder,
+            cassette_store=MockStore(),
+        )
+
+        list(broker.replay(interaction.request))
+
+        assert save_called is False
+
+    def test_save_receives_updated_cassette(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that save receives cassette with new interaction."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+        saved_cassette: Cassette | None = None
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return Cassette(interactions=())
+
+            def save(self, cassette: Cassette) -> None:
+                nonlocal saved_cassette
+                saved_cassette = cassette
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"live-data", sequence=0),)
+
+        broker = Broker(
+            cassette=cassette,
+            mode="auto",
+            live_responder=mock_responder,
+            cassette_store=MockStore(),
+        )
+
+        list(broker.replay(request))
+
+        assert saved_cassette is not None
+        assert len(saved_cassette.interactions) == 1
+        assert saved_cassette.interactions[0].request == request
+        assert saved_cassette.interactions[0].response_chunks[0].data == b"live-data"
+
+    def test_no_error_when_store_not_configured(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that recording works without cassette_store."""
+        cassette = Cassette(interactions=())
+        request = make_request()
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"response", sequence=0),)
+
+        broker = Broker(
+            cassette=cassette,
+            mode="auto",
+            live_responder=mock_responder,
+        )
+
+        chunks = list(broker.replay(request))
+
+        assert len(chunks) == 1
+        assert len(broker.cassette.interactions) == 1
+
+
 class TestInteractionNotFoundError:
     """Test suite for InteractionNotFoundError."""
 
@@ -277,3 +452,22 @@ class TestInteractionNotFoundError:
         assert "test-proto" in message
         assert "fetch" in message
         assert "resource-123" in message
+
+    def test_inherits_from_interposition_error(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that InteractionNotFoundError inherits from InterpositionError."""
+        request = make_request()
+        error = InteractionNotFoundError(request)
+
+        assert isinstance(error, InterpositionError)
+
+
+class TestLiveResponderRequiredError:
+    """Test suite for LiveResponderRequiredError."""
+
+    def test_inherits_from_interposition_error(self) -> None:
+        """Test that LiveResponderRequiredError inherits from InterpositionError."""
+        error = LiveResponderRequiredError("record")
+
+        assert isinstance(error, InterpositionError)

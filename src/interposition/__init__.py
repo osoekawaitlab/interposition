@@ -4,7 +4,12 @@ Provides record, replay, and control capabilities.
 """
 
 from interposition._version import __version__
-from interposition.errors import InteractionNotFoundError, LiveResponderRequiredError
+from interposition.errors import (
+    CassetteSaveError,
+    InteractionNotFoundError,
+    InterpositionError,
+    LiveResponderRequiredError,
+)
 from interposition.models import (
     Cassette,
     Interaction,
@@ -13,16 +18,21 @@ from interposition.models import (
     RequestFingerprint,
     ResponseChunk,
 )
-from interposition.services import Broker, BrokerMode
+from interposition.services import Broker, BrokerMode, CassetteStore
+from interposition.stores import JsonFileCassetteStore
 
 __all__ = [
     "Broker",
     "BrokerMode",
     "Cassette",
+    "CassetteSaveError",
+    "CassetteStore",
     "Interaction",
     "InteractionNotFoundError",
     "InteractionRequest",
     "InteractionValidationError",
+    "InterpositionError",
+    "JsonFileCassetteStore",
     "LiveResponderRequiredError",
     "RequestFingerprint",
     "ResponseChunk",

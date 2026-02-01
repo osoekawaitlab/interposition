@@ -16,6 +16,7 @@ Instead, it provides a **pure logic engine** for storage, matching, and replay. 
 - **Serializable**: Built-in JSON/YAML serialization for cassette persistence
 - **Memory-efficient**: O(1) lookup with fingerprint indexing
 - **Streaming**: Generator-based response delivery
+- **Multi-mode**: Supports replay, record, and auto modes
 
 ## Architecture
 
@@ -173,9 +174,163 @@ for chunk in broker.replay(request):
     print(f"Received chunk: {len(chunk.data)} bytes")
 ```
 
+### Broker Modes
+
+The `Broker` supports three modes via the `mode` parameter:
+
+| Mode | Behavior |
+|------|----------|
+| `replay` | Default. Returns recorded responses only. Raises `InteractionNotFoundError` on cache miss. |
+| `record` | Always forwards to live responder and records. Ignores existing cassette entries. |
+| `auto` | Returns recorded response if available; otherwise forwards to live and records. |
+
+The `BrokerMode` type alias is available for type hints:
+
+```python
+from interposition import BrokerMode
+
+mode: BrokerMode = "auto"
+```
+
+### Live Responder
+
+For `record` and `auto` modes, you must provide a `live_responder` callable that forwards requests to your actual backend:
+
+```python
+from interposition import (
+    Broker,
+    Cassette,
+    InteractionRequest,
+    ResponseChunk,
+)
+from collections.abc import Iterable
+
+def my_live_responder(request: InteractionRequest) -> Iterable[ResponseChunk]:
+    """Forward request to actual backend and yield response chunks."""
+    # Your actual implementation here
+    response = your_http_client.request(
+        method=request.action,
+        url=request.target,
+        headers=dict(request.headers),
+        data=request.body,
+    )
+    yield ResponseChunk(data=response.content, sequence=0)
+```
+
+The `LiveResponder` type alias is available:
+
+```python
+from interposition.services import LiveResponder
+```
+
+### Record Mode
+
+Use `record` mode to capture new interactions:
+
+```python
+# Start with empty cassette
+cassette = Cassette(interactions=())
+
+broker = Broker(
+    cassette=cassette,
+    mode="record",
+    live_responder=my_live_responder,
+)
+
+# All requests are forwarded and recorded
+response = list(broker.replay(request))
+
+# Save the updated cassette
+with open("cassette.json", "w") as f:
+    f.write(broker.cassette.model_dump_json(indent=2))
+```
+
+### Auto Mode
+
+Use `auto` mode for hybrid workflows (replay if available, record if not):
+
+```python
+# Load existing cassette (may be empty or partial)
+with open("cassette.json") as f:
+    cassette = Cassette.model_validate_json(f.read())
+
+broker = Broker(
+    cassette=cassette,
+    mode="auto",
+    live_responder=my_live_responder,
+)
+
+# Returns recorded response if exists, otherwise forwards and records
+response = list(broker.replay(request))
+```
+
+### Cassette Store
+
+For automatic cassette persistence during recording, use a `CassetteStore`. The `CassetteStore` protocol defines a simple interface for loading and saving cassettes:
+
+```python
+from interposition import CassetteStore
+
+class MyCassetteStore:
+    """Custom store implementation."""
+
+    def load(self) -> Cassette:
+        """Load cassette from storage."""
+        ...
+
+    def save(self, cassette: Cassette) -> None:
+        """Save cassette to storage."""
+        ...
+```
+
+When a `cassette_store` is provided to the `Broker`, it automatically saves the cassette after each recorded interaction.
+
+### JsonFileCassetteStore
+
+A built-in file-based cassette store using JSON format:
+
+```python
+from pathlib import Path
+from interposition import Broker, Cassette, JsonFileCassetteStore
+
+# Create store pointing to a JSON file
+store = JsonFileCassetteStore(Path("cassettes/my_test.json"))
+
+# Load existing cassette (raises FileNotFoundError if not exists)
+cassette = store.load()
+
+# Or start with empty cassette
+cassette = Cassette(interactions=())
+
+# Create broker with automatic persistence
+broker = Broker(
+    cassette=cassette,
+    mode="record",
+    live_responder=my_live_responder,
+    cassette_store=store,  # Auto-saves after each recording
+)
+
+# After replay, cassette is automatically saved to file
+response = list(broker.replay(request))
+```
+
+The `JsonFileCassetteStore` creates parent directories automatically when saving.
+If saving fails, the error is propagated and response streaming stops (fail-fast).
+
 ### Error Handling
 
-If a matching interaction is not found, the broker raises `InteractionNotFoundError`:
+All interposition exceptions inherit from `InterpositionError`, allowing you to catch all domain errors with a single handler:
+
+```python
+from interposition import InterpositionError
+
+try:
+    broker.replay(request)
+except InterpositionError as e:
+    print(f"Interposition error: {e}")
+```
+
+**InteractionNotFoundError**: Raised when no matching interaction exists (in `replay` mode) or when `auto` mode has a cache miss without a configured `live_responder`:
 
 ```python
 from interposition import InteractionNotFoundError
@@ -184,6 +339,62 @@ try:
     broker.replay(unknown_request)
 except InteractionNotFoundError as e:
     print(f"Not recorded: {e.request.target}")
+```
+
+**LiveResponderRequiredError**: Raised when `record` mode is used without a `live_responder`:
+
+```python
+from interposition import LiveResponderRequiredError
+
+broker = Broker(cassette=cassette, mode="record")  # No live_responder!
+
+try:
+    broker.replay(request)
+except LiveResponderRequiredError as e:
+    print(f"live_responder required for {e.mode} mode")
+```
+
+**InteractionValidationError**: Raised when an `Interaction` fails validation (e.g., fingerprint mismatch or invalid response chunk sequence):
+
+```python
+from interposition import Interaction, InteractionValidationError
+
+try:
+    # This will fail: fingerprint doesn't match request
+    interaction = Interaction(
+        request=request,
+        fingerprint=wrong_fingerprint,  # Mismatch!
+        response_chunks=chunks,
+    )
+except InteractionValidationError as e:
+    print(f"Validation failed: {e}")
+```
+
+**CassetteSaveError**: Raised when `JsonFileCassetteStore.save()` fails due to I/O errors (permission denied, disk full, etc.):
+
+```python
+from pathlib import Path
+from interposition import CassetteSaveError, JsonFileCassetteStore
+
+store = JsonFileCassetteStore(Path("/readonly/cassette.json"))
+
+try:
+    store.save(cassette)
+except CassetteSaveError as e:
+    print(f"Failed to save to {e.path}: {e.__cause__}")
+```
+
+## Version
+
+Access the package version programmatically:
+
+```python
+from interposition import __version__
+
+if __version__ < "0.2.0":
+    print("Auto mode is not supported")
+else:
+    print("Auto mode is supported")
 ```
 
 ## Development

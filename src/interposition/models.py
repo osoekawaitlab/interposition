@@ -14,6 +14,8 @@ from pydantic import (
 )
 from typing_extensions import Self
 
+from interposition.errors import InterpositionError
+
 SHA256_HEX_LENGTH = 64
 
 # JSON serialization settings for canonical fingerprint generation
@@ -21,7 +23,7 @@ _CANONICAL_JSON_SEPARATORS = (",", ":")
 _CANONICAL_JSON_SORT_KEYS = True
 
 
-class InteractionValidationError(ValueError):
+class InteractionValidationError(InterpositionError, ValueError):
     """Raised when interaction validation fails."""
 
 
