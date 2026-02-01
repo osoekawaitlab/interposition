@@ -735,6 +735,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0011-cassettestore-persistence-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0011: CassetteStore Persistence Port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0012-cassette-save-failure-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0012: Cassette Save Failure Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1114,6 +1136,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0011-cassette-store-persistence-port/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0011: CassetteStore Persistence Port
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0012-cassette-save-failure-behavior/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0012: Cassette Save Failure Behavior
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1304,6 +1382,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0011-cassettestore-persistence-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0011: CassetteStore Persistence Port
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0012-cassette-save-failure-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0012: Cassette Save Failure Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1358,7 +1458,7 @@
 <hr />
 <h3 id="adr-0007-broker-mode-parameter-for-record-functionality"><a href="../../adr/0007-broker-mode-parameter/">ADR-0007: Broker Mode Parameter for Record Functionality</a><a class="headerlink" href="#adr-0007-broker-mode-parameter-for-record-functionality" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-25</p>
-<p>Add a mode parameter to the Broker class (replay, record, auto) to determine MISS handling behavior, enabling record functionality.</p>
+<p>Add a mode parameter to the Broker class (replay, record, auto) to determine replay vs. live-forward behavior, enabling record functionality.</p>
 <hr />
 <h3 id="adr-0008-use-literal-type-for-broker-mode-values"><a href="../../adr/0008-literal-type-for-broker-mode/">ADR-0008: Use Literal Type for Broker Mode Values</a><a class="headerlink" href="#adr-0008-use-literal-type-for-broker-mode-values" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-25</p>
@@ -1370,7 +1470,15 @@
 <hr />
 <h3 id="adr-0010-buffer-live-responses-before-recording"><a href="../../adr/0010-record-buffering/">ADR-0010: Buffer Live Responses Before Recording</a><a class="headerlink" href="#adr-0010-buffer-live-responses-before-recording" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-25</p>
-<p>In record/auto mode on a MISS, fully collect live response chunks before returning any data, then record and return the buffered response.</p>
+<p>When forwarding in record/auto mode, fully collect live response chunks before returning any data, then record and return the buffered response.</p>
+<hr />
+<h3 id="adr-0011-cassettestore-persistence-port"><a href="../../adr/0011-cassette-store-persistence-port/">ADR-0011: CassetteStore Persistence Port</a><a class="headerlink" href="#adr-0011-cassettestore-persistence-port" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-30</p>
+<p>Define CassetteStore as a Protocol port with load() and save() methods for storage-agnostic cassette persistence with automatic save on record.</p>
+<hr />
+<h3 id="adr-0012-cassette-save-failure-behavior"><a href="../../adr/0012-cassette-save-failure-behavior/">ADR-0012: Cassette Save Failure Behavior</a><a class="headerlink" href="#adr-0012-cassette-save-failure-behavior" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-01-31</p>
+<p>Define fail-fast behavior when cassette persistence fails (save errors are propagated and response streaming stops).</p>
 
 
 

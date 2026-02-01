@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0003-generator-streaming/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0011-cassette-store-persistence-port/">
       
       
-        <link rel="prev" href="../0002-sha256-fingerprinting/">
+        <link rel="prev" href="../0010-record-buffering/">
       
       
-        <link rel="next" href="../0004-first-match-strategy/">
+        <link rel="next" href="../0012-cassette-save-failure-behavior/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>ADR 0003: Use Generator Pattern for Response Streaming - interposition</title>
+        <title>ADR 0011: CassetteStore Persistence Port - interposition</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0003-use-generator-pattern-for-response-streaming" class="md-skip">
+        <a href="#adr-0011-cassettestore-persistence-port" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0003: Use Generator Pattern for Response Streaming
+              ADR 0011: CassetteStore Persistence Port
             
           </span>
         </div>
@@ -720,37 +720,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR 0003: Use Generator Pattern for Response Streaming
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0003-generator-streaming/" class="md-nav__link">
         
   
   
@@ -766,203 +739,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Date
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rationale
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implications
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#positive-implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Positive Implications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concerns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Concerns
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#return-tuple-of-chunks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Return Tuple of Chunks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#return-list-of-chunks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Return List of Chunks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#async-generator-asynciteratorresponsechunk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async Generator (AsyncIterator[ResponseChunk])
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#callback-based-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Callback-based API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#future-direction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Future Direction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1168,10 +944,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0011-cassette-store-persistence-port/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0011: CassetteStore Persistence Port
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1187,6 +990,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rationale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#callable-for-save-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Callable for save only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-save-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual save only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#built-in-file-persistence-in-broker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in file persistence in Broker
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Direction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1395,10 +1384,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#return-tuple-of-chunks" class="md-nav__link">
+  <a href="#callable-for-save-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Return Tuple of Chunks
+        Callable for save only
       
     </span>
   </a>
@@ -1406,10 +1395,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#return-list-of-chunks" class="md-nav__link">
+  <a href="#manual-save-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Return List of Chunks
+        Manual save only
       
     </span>
   </a>
@@ -1417,21 +1406,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#async-generator-asynciteratorresponsechunk" class="md-nav__link">
+  <a href="#built-in-file-persistence-in-broker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async Generator (AsyncIterator[ResponseChunk])
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#callback-based-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Callback-based API
+        Built-in file persistence in Broker
       
     </span>
   </a>
@@ -1485,80 +1463,73 @@
   
 
 
-<h1 id="adr-0003-use-generator-pattern-for-response-streaming">ADR 0003: Use Generator Pattern for Response Streaming<a class="headerlink" href="#adr-0003-use-generator-pattern-for-response-streaming" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0011-cassettestore-persistence-port">ADR 0011: CassetteStore Persistence Port<a class="headerlink" href="#adr-0011-cassettestore-persistence-port" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2026-01-05</p>
+<p>2026-01-30</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The replay system needs to deliver response chunks to consumers. Responses may consist of multiple chunks that should be delivered in sequence. The library must support both small responses (single chunk) and potentially large responses (many chunks) without excessive memory usage.</p>
+<p>Record and auto modes update the in-memory Cassette when new interactions are captured. However, there is no persistence mechanism—recorded interactions are lost when the process ends.</p>
+<p>Users need a way to persist cassettes automatically, but per ADR 0006 (External Protocol Adapters), the core package must remain storage-agnostic. The Broker cannot assume file I/O, databases, cloud storage, or any specific persistence strategy.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Use Python generators (<code>Iterator[ResponseChunk]</code>) for streaming response chunks. The <code>Broker.replay()</code> method returns an iterator that yields chunks lazily.</p>
+<p>Define CassetteStore as a Protocol port with two methods: <code>load()</code> and <code>save()</code>.</p>
+<p>The Broker accepts an optional <code>cassette_store</code> parameter at construction time. When configured, the Broker automatically calls <code>save()</code> after recording new interactions.</p>
+<p>A reference implementation <code>JsonFileCassetteStore</code> is provided in a separate module (<code>stores.py</code>) to keep JSON/filesystem logic out of core business logic.</p>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Memory efficiency</strong>: Chunks are yielded one at a time, avoiding loading entire response into memory</li>
-<li><strong>Lazy evaluation</strong>: Consumers can process chunks as they arrive, enabling streaming workflows</li>
-<li><strong>Pythonic</strong>: Generator pattern is idiomatic Python for sequential data</li>
-<li><strong>Composable</strong>: Generators can be chained, filtered, or transformed using standard itertools</li>
-<li><strong>Backpressure</strong>: Consumer controls iteration pace, natural flow control</li>
-<li><strong>Testable</strong>: Easy to collect into list for testing (<code>list(broker.replay(request))</code>)</li>
+<li><strong>Protocol over Callable</strong>: Unlike LiveResponder (single method), CassetteStore requires two methods (<code>load</code> and <code>save</code>). A Protocol provides a clear structural contract.</li>
+<li><strong>Storage-agnostic</strong>: The Broker delegates persistence to user-provided code. The core library has no I/O dependencies.</li>
+<li><strong>Auto-save on record</strong>: Automatically persisting after each recording simplifies the common use case. Users don't need to manually save after each interaction.</li>
+<li><strong>Optional dependency</strong>: <code>cassette_store=None</code> means no automatic persistence (current behavior preserved).</li>
+<li><strong>Separate module for implementation</strong>: <code>JsonFileCassetteStore</code> lives in <code>stores.py</code>, not <code>services.py</code>, keeping JSON serialization details out of the Broker.</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Scales to arbitrarily large responses without memory pressure</li>
-<li>Natural fit for streaming protocols (HTTP chunked encoding, gRPC streaming, etc.)</li>
-<li>Consumers can process chunks incrementally (progress indicators, real-time processing)</li>
-<li>Simple implementation using <code>yield from interaction.response_chunks</code></li>
-<li>Clear iteration boundary (StopIteration signals completion)</li>
+<li>Zero I/O dependencies in core business logic.</li>
+<li>Users can implement any persistence strategy (files, databases, cloud storage).</li>
+<li>Simple integration—just pass a store to the Broker.</li>
+<li>Automatic saving reduces boilerplate for record/auto workflows.</li>
+<li>Pydantic's built-in serialization makes JSON implementation trivial.</li>
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Consumers must iterate to completion with no random access to middle chunks (mitigation: acceptable tradeoff for memory efficiency)</li>
-<li>Generator state cannot be reset for re-iteration (mitigation: call <code>replay()</code> again to get new generator)</li>
-<li>Error handling requires try/except around iteration, not just the initial call (mitigation: standard Python pattern for iterators)</li>
-<li>Some consumers may prefer materialized list (mitigation: use <code>list()</code> wrapper when needed)</li>
+<li>Synchronous I/O may block during <code>save()</code> (mitigation: consider async variant in future).</li>
+<li>Save is called after each recording, which may be expensive for high-frequency recording (mitigation: users can implement buffered/batched stores).</li>
+<li>User must implement store correctly (mitigation: provide JsonFileCassetteStore as reference).</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<h3 id="return-tuple-of-chunks">Return Tuple of Chunks<a class="headerlink" href="#return-tuple-of-chunks" title="Permanent link">&para;</a></h3>
-<p>Returning all chunks as a tuple immediately.</p>
+<h3 id="callable-for-save-only">Callable for save only<a class="headerlink" href="#callable-for-save-only" title="Permanent link">&para;</a></h3>
+<p>Define <code>CassetteSaver = Callable[[Cassette], None]</code> for save-only functionality.</p>
 <ul>
-<li><strong>Pros</strong>: Simpler for consumers that need all chunks upfront, immutable collection</li>
-<li><strong>Cons</strong>: Entire response must be loaded into memory before returning, no memory savings for large responses</li>
-<li><strong>Reason for rejection</strong>: Defeats purpose of streaming; memory inefficient for large responses</li>
+<li><strong>Pros</strong>: Simpler, matches LiveResponder pattern.</li>
+<li><strong>Cons</strong>: No <code>load()</code> method, users must manage loading separately.</li>
+<li><strong>Reason for rejection</strong>: Having both <code>load()</code> and <code>save()</code> in one interface provides a cohesive persistence abstraction.</li>
 </ul>
-<h3 id="return-list-of-chunks">Return List of Chunks<a class="headerlink" href="#return-list-of-chunks" title="Permanent link">&para;</a></h3>
-<p>Returning all chunks as a list immediately.</p>
+<h3 id="manual-save-only">Manual save only<a class="headerlink" href="#manual-save-only" title="Permanent link">&para;</a></h3>
+<p>Require users to call <code>broker.cassette.model_dump_json()</code> manually.</p>
 <ul>
-<li><strong>Pros</strong>: Familiar collection type, random access support</li>
-<li><strong>Cons</strong>: Same memory concerns as tuple, mutable return type contradicts immutability principle</li>
-<li><strong>Reason for rejection</strong>: Memory inefficiency plus mutability concerns</li>
+<li><strong>Pros</strong>: No new abstractions needed.</li>
+<li><strong>Cons</strong>: Error-prone, users may forget to save after recording.</li>
+<li><strong>Reason for rejection</strong>: Auto-save provides better user experience for the common case.</li>
 </ul>
-<h3 id="async-generator-asynciteratorresponsechunk">Async Generator (<code>AsyncIterator[ResponseChunk]</code>)<a class="headerlink" href="#async-generator-asynciteratorresponsechunk" title="Permanent link">&para;</a></h3>
-<p>Using async generators for streaming chunks.</p>
+<h3 id="built-in-file-persistence-in-broker">Built-in file persistence in Broker<a class="headerlink" href="#built-in-file-persistence-in-broker" title="Permanent link">&para;</a></h3>
+<p>Add file path parameter directly to Broker.</p>
 <ul>
-<li><strong>Pros</strong>: Natural fit for I/O-bound operations, enables concurrent processing</li>
-<li><strong>Cons</strong>: Adds complexity without clear benefit for in-memory replay, forces async/await on all consumers</li>
-<li><strong>Reason for rejection</strong>: Unnecessary complexity for in-memory cassettes; consider for future I/O-based backends</li>
-</ul>
-<h3 id="callback-based-api">Callback-based API<a class="headerlink" href="#callback-based-api" title="Permanent link">&para;</a></h3>
-<p>Using callback functions to deliver chunks (e.g., <code>replay(request, on_chunk=callback)</code>).</p>
-<ul>
-<li><strong>Pros</strong>: Familiar pattern from JavaScript, enables push-based flow</li>
-<li><strong>Cons</strong>: Less Pythonic, harder to compose, inverted control flow is harder to test, no natural backpressure mechanism</li>
-<li><strong>Reason for rejection</strong>: Generators provide better ergonomics and testability in Python</li>
+<li><strong>Pros</strong>: Simpler API for file-based use case.</li>
+<li><strong>Cons</strong>: Violates ADR 0006, couples core logic to filesystem.</li>
+<li><strong>Reason for rejection</strong>: Broker should remain storage-agnostic.</li>
 </ul>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<p>This decision should be revisited if:</p>
+<p>Revisit if:</p>
 <ul>
-<li>Async I/O support is added (consider <code>AsyncIterator[ResponseChunk]</code>)</li>
-<li>Profiling shows generator overhead is measurable (unlikely)</li>
-<li>Random access to chunks is frequently needed (consider hybrid approach with optional materialization)</li>
+<li>Async support is added (consider <code>AsyncCassetteStore</code> Protocol).</li>
+<li>Lifecycle hooks are added (allow validation before save).</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://peps.python.org/pep-0255/">PEP 255 - Simple Generators</a></li>
-<li><a href="https://docs.python.org/3/library/stdtypes.html#iterator-types">Python Iterator Protocol</a></li>
+<li>ADR 0006: External Protocol Adapters Strategy</li>
+<li>ADR 0009: LiveResponder Port for Upstream Forwarding</li>
 </ul>
 
 

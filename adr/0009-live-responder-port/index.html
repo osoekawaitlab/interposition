@@ -1105,6 +1105,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#amendment-2026-01-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-01-30)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amendment (2026-01-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reason-for-amendment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reason for Amendment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-original-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on Original ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1129,6 +1179,62 @@
     
   
     ADR 0010: Buffer Live Responses Before Recording
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-cassette-store-persistence-port/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0011: CassetteStore Persistence Port
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-cassette-save-failure-behavior/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0012: Cassette Save Failure Behavior
   
 
     
@@ -1365,6 +1471,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#amendment-2026-01-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-01-30)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amendment (2026-01-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reason-for-amendment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reason for Amendment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-original-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on Original ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1387,7 +1543,7 @@
 
 <h1 id="adr-0009-liveresponder-port-for-upstream-forwarding">ADR 0009: LiveResponder Port for Upstream Forwarding<a class="headerlink" href="#adr-0009-liveresponder-port-for-upstream-forwarding" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<p>Accepted</p>
+<p>Accepted (Amended 2026-01-30)</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
 <p>2026-01-25</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
@@ -1443,6 +1599,24 @@
 <ul>
 <li>ADR 0006: External Protocol Adapters Strategy</li>
 <li>ADR 0007: Broker Mode Parameter for Record Functionality</li>
+</ul>
+<h2 id="amendment-2026-01-30">Amendment (2026-01-30)<a class="headerlink" href="#amendment-2026-01-30" title="Permanent link">&para;</a></h2>
+<h3 id="what-changed">What Changed<a class="headerlink" href="#what-changed" title="Permanent link">&para;</a></h3>
+<p>Corrected an earlier ambiguous description of when forwarding occurs. Record
+mode always forwards to live, while auto mode forwards only on MISS.</p>
+<h3 id="reason-for-amendment">Reason for Amendment<a class="headerlink" href="#reason-for-amendment" title="Permanent link">&para;</a></h3>
+<p>The original text described forwarding only on MISS for both modes, which does
+not match the finalized record-mode behavior. The port definition remains
+unchanged; the clarification is about forwarding conditions.</p>
+<h3 id="impact-on-original-adr">Impact on Original ADR<a class="headerlink" href="#impact-on-original-adr" title="Permanent link">&para;</a></h3>
+<p><strong>Unchanged:</strong></p>
+<ul>
+<li>LiveResponder remains a callable port with the same signature.</li>
+<li>Broker accepts an optional live_responder.</li>
+</ul>
+<p><strong>Changed:</strong></p>
+<ul>
+<li>Forwarding conditions are now explicitly tied to record vs. auto mode.</li>
 </ul>
 
 

@@ -16,7 +16,7 @@
         <link rel="prev" href="../0009-live-responder-port/">
       
       
-        <link rel="next" href="../../api/api_reference/">
+        <link rel="next" href="../0011-cassette-store-persistence-port/">
       
       
         
@@ -1144,10 +1144,116 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#amendment-2026-01-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-01-30)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amendment (2026-01-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reason-for-amendment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reason for Amendment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-original-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on Original ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-cassette-store-persistence-port/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0011: CassetteStore Persistence Port
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-cassette-save-failure-behavior/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0012: Cassette Save Failure Behavior
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1387,6 +1493,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#amendment-2026-01-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-01-30)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amendment (2026-01-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reason-for-amendment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reason for Amendment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-original-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on Original ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1409,7 +1565,7 @@
 
 <h1 id="adr-0010-buffer-live-responses-before-recording">ADR 0010: Buffer Live Responses Before Recording<a class="headerlink" href="#adr-0010-buffer-live-responses-before-recording" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<p>Accepted</p>
+<p>Accepted (Amended 2026-01-30)</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
 <p>2026-01-25</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
@@ -1474,6 +1630,24 @@
 <ul>
 <li>ADR 0007: Broker Mode Parameter for Record Functionality</li>
 <li>ADR 0009: LiveResponder Port for Upstream Forwarding</li>
+</ul>
+<h2 id="amendment-2026-01-30">Amendment (2026-01-30)<a class="headerlink" href="#amendment-2026-01-30" title="Permanent link">&para;</a></h2>
+<h3 id="what-changed">What Changed<a class="headerlink" href="#what-changed" title="Permanent link">&para;</a></h3>
+<p>Corrected the earlier MISS-only framing. Buffering applies whenever forwarding
+occurs in record/auto mode, not only on MISS.</p>
+<h3 id="reason-for-amendment">Reason for Amendment<a class="headerlink" href="#reason-for-amendment" title="Permanent link">&para;</a></h3>
+<p>The original text framed buffering as MISS-only, which is incorrect for record
+mode (always forward). Buffering must apply to any forward path to preserve
+recording integrity.</p>
+<h3 id="impact-on-original-adr">Impact on Original ADR<a class="headerlink" href="#impact-on-original-adr" title="Permanent link">&para;</a></h3>
+<p><strong>Unchanged:</strong></p>
+<ul>
+<li>Buffering is required before recording and returning responses.</li>
+<li>Trade-offs (memory/latency) remain the same.</li>
+</ul>
+<p><strong>Changed:</strong></p>
+<ul>
+<li>The trigger condition is "any forward" rather than "MISS only."</li>
 </ul>
 
 

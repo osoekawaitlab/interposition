@@ -1060,6 +1060,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#amendment-2026-01-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-01-30)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amendment (2026-01-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reason-for-amendment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reason for Amendment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-original-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on Original ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1140,6 +1190,62 @@
     
   
     ADR 0010: Buffer Live Responses Before Recording
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-cassette-store-persistence-port/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0011: CassetteStore Persistence Port
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-cassette-save-failure-behavior/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0012: Cassette Save Failure Behavior
   
 
     
@@ -1387,6 +1493,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#amendment-2026-01-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-01-30)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amendment (2026-01-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reason-for-amendment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reason for Amendment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-original-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on Original ADR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1409,7 +1565,7 @@
 
 <h1 id="adr-0007-broker-mode-parameter-for-record-functionality">ADR 0007: Broker Mode Parameter for Record Functionality<a class="headerlink" href="#adr-0007-broker-mode-parameter-for-record-functionality" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
-<p>Accepted</p>
+<p>Accepted (Amended 2026-01-30)</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
 <p>2026-01-25</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
@@ -1475,6 +1631,25 @@
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Issue #5: Record mode feature request</li>
+</ul>
+<h2 id="amendment-2026-01-30">Amendment (2026-01-30)<a class="headerlink" href="#amendment-2026-01-30" title="Permanent link">&para;</a></h2>
+<h3 id="what-changed">What Changed<a class="headerlink" href="#what-changed" title="Permanent link">&para;</a></h3>
+<p>Corrected the earlier MISS-only phrasing for record mode. Record mode always
+forwards to live and records, even on HIT, to distinguish it from auto mode.</p>
+<h3 id="reason-for-amendment">Reason for Amendment<a class="headerlink" href="#reason-for-amendment" title="Permanent link">&para;</a></h3>
+<p>The original text implied record mode only forwarded on MISS, which conflicts
+with the implemented behavior. Record mode is a forced-refresh workflow, while
+auto mode remains cache-friendly.</p>
+<h3 id="impact-on-original-adr">Impact on Original ADR<a class="headerlink" href="#impact-on-original-adr" title="Permanent link">&para;</a></h3>
+<p><strong>Unchanged:</strong></p>
+<ul>
+<li>Broker has a mode parameter with replay/record/auto values.</li>
+<li>auto mode replays on HIT and forwards on MISS.</li>
+<li>replay mode raises on MISS.</li>
+</ul>
+<p><strong>Changed:</strong></p>
+<ul>
+<li>record mode is explicitly defined as always forwarding and recording.</li>
 </ul>
 
 
