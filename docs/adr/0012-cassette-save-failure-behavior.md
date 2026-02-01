@@ -33,7 +33,7 @@ If saving a cassette fails, the error is propagated to the caller and the respon
 
 ### Concerns
 
-- Saves are synchronous; transient I/O failures will fail the request　(mitigation: implement a retrying or buffered CassetteStore).
+- Saves are synchronous; transient I/O failures will fail the request (mitigation: implement a retrying or buffered CassetteStore).
 - Users who want "best-effort persistence" must implement a custom store that　swallows or defers errors (mitigation: provide a documented example store if　demand emerges).
 
 ## Alternatives
