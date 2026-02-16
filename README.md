@@ -314,6 +314,13 @@ broker = Broker(
 response = list(broker.replay(request))
 ```
 
+You can also use `Broker.from_store()` to load the cassette and create a broker in one step:
+
+```python
+store = JsonFileCassetteStore(Path("cassettes/my_test.json"))
+broker = Broker.from_store(store, mode="replay")
+```
+
 The `JsonFileCassetteStore` creates parent directories automatically when saving.
 If saving fails, the error is propagated and response streaming stops (fail-fast).
 
