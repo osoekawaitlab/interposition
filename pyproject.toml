@@ -71,9 +71,10 @@ ignore = [
 "tests/**/*.py" = [
     "S101",    # assert-used (pytest uses asserts)
 ]
-"e2e/**/*.py" = [
+"e2e/step_impl/*.py" = [
     "S101",  # assert-used (E2E tests use asserts)
     "S607",  # start-process-with-partial-path
+    "RUF005",  # collection-literal-concatenation (Gauge's parser fails on (*iterable, item) syntax)
 ]
 
 [tool.ruff.lint.pydocstyle]

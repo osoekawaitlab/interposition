@@ -4,12 +4,14 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
+import pytest
 from getgauge.python import after_scenario, data_store, step
 
 from interposition import (
     Broker,
     BrokerMode,
     Cassette,
+    CassetteLoadError,
     Interaction,
     InteractionNotFoundError,
     InteractionRequest,
@@ -397,6 +399,55 @@ def configure_json_file_cassette_store() -> None:
     data_store.scenario["cassette_store_temp_dir"] = temp_dir
 
 
+@step("Configure JSON file cassette store with create_if_missing at temporary path")
+def configure_json_file_cassette_store_create_if_missing() -> None:
+    """Configure a cassette store with create_if_missing at a temporary path."""
+    temp_dir = tempfile.TemporaryDirectory()
+    path = Path(temp_dir.name) / "cassette.json"
+    store = JsonFileCassetteStore(path, create_if_missing=True)
+    data_store.scenario["cassette_store"] = store
+    data_store.scenario["cassette_store_path"] = path
+    data_store.scenario["cassette_store_temp_dir"] = temp_dir
+
+
+@step("Cassette should have no interactions")
+def cassette_should_have_no_interactions() -> None:
+    """Verify cassette has no interactions."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    assert len(cassette.interactions) == 0, (
+        f"Expected 0 interactions, got {len(cassette.interactions)}"
+    )
+
+
+@step("Save interaction to cassette for <protocol> <action> <target>")
+def save_interaction_to_cassette(protocol: str, action: str, target: str) -> None:
+    """Create an interaction and add it to the current cassette."""
+    request = InteractionRequest(
+        protocol=protocol,
+        action=action,
+        target=target,
+        headers=(),
+        body=b"test-data",
+    )
+    chunks = (ResponseChunk(data=b"response-data", sequence=0),)
+    interaction = Interaction(
+        request=request,
+        fingerprint=request.fingerprint(),
+        response_chunks=chunks,
+    )
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    new_interactions = tuple(cassette.interactions) + (interaction,)
+    data_store.scenario["cassette"] = Cassette(interactions=new_interactions)
+
+
+@step("Save cassette to file store")
+def save_cassette_to_file_store() -> None:
+    """Save the current cassette to the configured file store."""
+    cassette = cast("Cassette", data_store.scenario["cassette"])
+    store = cast("JsonFileCassetteStore", data_store.scenario["cassette_store"])
+    store.save(cassette)
+
+
 @step("Storing broker in <mode> mode receives request for <protocol> <action> <target>")
 def broker_in_mode_with_store_receives_request(
     mode: str, protocol: str, action: str, target: str
@@ -445,6 +496,36 @@ def load_cassette_from_file_store() -> None:
     store = cast("JsonFileCassetteStore", data_store.scenario["cassette_store"])
     cassette = store.load()
     data_store.scenario["cassette"] = cassette
+
+
+@step("Write corrupted JSON to cassette file")
+def write_corrupted_json_to_cassette_file() -> None:
+    """Write invalid JSON to the cassette file path."""
+    path = cast("Path", data_store.scenario["cassette_store_path"])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("{corrupted json", encoding="utf-8")
+
+
+@step("Loading cassette from file store should raise CassetteLoadError")
+def loading_cassette_should_raise_cassette_load_error() -> None:
+    """Verify that loading from file store raises CassetteLoadError."""
+    store = cast("JsonFileCassetteStore", data_store.scenario["cassette_store"])
+    try:
+        store.load()
+    except CassetteLoadError as e:
+        data_store.scenario["last_cassette_load_error"] = e
+        return
+    pytest.fail("Expected CassetteLoadError but no error was raised")
+
+
+@step("The original error should be accessible from CassetteLoadError")
+def original_error_should_be_accessible() -> None:
+    """Verify that the original cause is accessible via __cause__."""
+    error = cast(
+        "CassetteLoadError",
+        data_store.scenario["last_cassette_load_error"],
+    )
+    assert error.__cause__ is not None
 
 
 @after_scenario

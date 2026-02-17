@@ -296,7 +296,7 @@ from interposition import Broker, Cassette, JsonFileCassetteStore
 # Create store pointing to a JSON file
 store = JsonFileCassetteStore(Path("cassettes/my_test.json"))
 
-# Load existing cassette (raises FileNotFoundError if not exists)
+# Load existing cassette (raises CassetteLoadError if not exists)
 cassette = store.load()
 
 # Or start with empty cassette
@@ -312,6 +312,16 @@ broker = Broker(
 
 # After replay, cassette is automatically saved to file
 response = list(broker.replay(request))
+```
+
+By default, `load()` raises `CassetteLoadError` if the file doesn't exist. Use `create_if_missing=True` to return an empty cassette instead — useful for record/auto workflows where the file is created on first save:
+
+```python
+store = JsonFileCassetteStore(
+    Path("cassettes/my_test.json"),
+    create_if_missing=True,
+)
+cassette = store.load()  # Returns empty Cassette if file doesn't exist
 ```
 
 The `JsonFileCassetteStore` creates parent directories automatically when saving.
