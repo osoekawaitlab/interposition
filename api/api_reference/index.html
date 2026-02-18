@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/api/api_reference/">
       
       
-        <link rel="prev" href="../../adr/0012-cassette-save-failure-behavior/">
+        <link rel="prev" href="../../adr/0013-cassette-store-load-missing-storage/">
       
       
       
@@ -975,6 +975,34 @@
     
   
     ADR 0012: Cassette Save Failure Behavior
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0013-cassette-store-load-missing-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0013: CassetteStore Load Behavior for Missing Storage
   
 
     
@@ -5456,56 +5484,84 @@ or chunks aren't sequential</p>
 <span class="normal"><a href="#__codelineno-0-60">60</a></span>
 <span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">JsonFileCassetteStore</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">JsonFileCassetteStore</span><span class="p">:</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File-based cassette store using JSON format.</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16"></a>
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">        path: Path to the JSON file for cassette storage.</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create_if_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize store with file path.</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">            path: Path to the JSON file (will be created if doesn&#39;t exist).</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the file path.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">            create_if_missing: If True, load() returns an empty Cassette</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">                when the file doesn&#39;t exist instead of raising CassetteLoadError.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span> <span class="o">=</span> <span class="n">create_if_missing</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the file path.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        Returns:</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">            Cassette instance loaded from file.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        Raises:</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">            FileNotFoundError: If file doesn&#39;t exist.</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">            pydantic.ValidationError: If JSON is invalid.</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        Creates parent directories if they don&#39;t exist.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">            cassette: The cassette to persist.</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        Raises:</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">            CassetteSaveError: If file write fails.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        Returns:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">            Cassette instance loaded from file. If create_if_missing is True</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">            and the file doesn&#39;t exist, returns an empty Cassette.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        Raises:</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">            CassetteLoadError: If file doesn&#39;t exist (and create_if_missing</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">                is False), file is unreadable, or JSON is invalid.</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>            <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span><span class="p">:</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>                <span class="k">return</span> <span class="n">Cassette</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="p">())</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>            <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>            <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>            <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        Creates parent directories if they don&#39;t exist.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">            cassette: The cassette to persist.</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        Raises:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">            CassetteSaveError: If file write fails.</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>            <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>            <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -5554,7 +5610,9 @@ or chunks aren't sequential</p>
 
 
 <a href="#interposition.JsonFileCassetteStore.__init__" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">path</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create_if_missing</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5589,6 +5647,23 @@ or chunks aren't sequential</p>
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>create_if_missing</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, load() returns an empty Cassette
+when the file doesn't exist instead of raising CassetteLoadError.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -5601,13 +5676,19 @@ or chunks aren't sequential</p>
 <span class="normal"><a href="#__codelineno-0-24">24</a></span>
 <span class="normal"><a href="#__codelineno-0-25">25</a></span>
 <span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create_if_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize store with file path.</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">        path: Path to the JSON file (will be created if doesn&#39;t exist).</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        create_if_missing: If True, load() returns an empty Cassette</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">            when the file doesn&#39;t exist instead of raising CassetteLoadError.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span> <span class="o">=</span> <span class="n">create_if_missing</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5645,7 +5726,17 @@ or chunks aren't sequential</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Cassette instance loaded from file.</p>
+                <p>Cassette instance loaded from file. If create_if_missing is True</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="interposition.models.Cassette" href="#interposition.models.Cassette">Cassette</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>and the file doesn't exist, returns an empty Cassette.</p>
               </div>
             </td>
           </tr>
@@ -5664,21 +5755,12 @@ or chunks aren't sequential</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+                  <code><span title="interposition.errors.CassetteLoadError">CassetteLoadError</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If file doesn't exist.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="pydantic.ValidationError">ValidationError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If JSON is invalid.</p>
+                <p>If file doesn't exist (and create_if_missing
+is False), file is unreadable, or JSON is invalid.</p>
               </div>
             </td>
           </tr>
@@ -5688,10 +5770,7 @@ or chunks aren't sequential</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/interposition/stores.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-37">37</a></span>
 <span class="normal"><a href="#__codelineno-0-38">38</a></span>
 <span class="normal"><a href="#__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#__codelineno-0-40">40</a></span>
@@ -5699,18 +5778,43 @@ or chunks aren't sequential</p>
 <span class="normal"><a href="#__codelineno-0-42">42</a></span>
 <span class="normal"><a href="#__codelineno-0-43">43</a></span>
 <span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">        Cassette instance loaded from file.</span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        FileNotFoundError: If file doesn&#39;t exist.</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        pydantic.ValidationError: If JSON is invalid.</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        Cassette instance loaded from file. If create_if_missing is True</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        and the file doesn&#39;t exist, returns an empty Cassette.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        CassetteLoadError: If file doesn&#39;t exist (and create_if_missing</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">            is False), file is unreadable, or JSON is invalid.</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span><span class="p">:</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="k">return</span> <span class="n">Cassette</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="p">())</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5790,39 +5894,39 @@ or chunks aren't sequential</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/interposition/stores.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">    Creates parent directories if they don&#39;t exist.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        cassette: The cassette to persist.</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        CassetteSaveError: If file write fails.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    Creates parent directories if they don&#39;t exist.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        cassette: The cassette to persist.</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        CassetteSaveError: If file write fails.</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6470,31 +6574,31 @@ Default is empty tuple.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/interposition/errors.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="k">class</span><span class="w"> </span><span class="nc">CassetteSaveError</span><span class="p">(</span><span class="n">InterpositionError</span><span class="p">):</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when cassette persistence fails.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">            path: The file path where save failed</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">            cause: The underlying exception that caused the failure</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="k">class</span><span class="w"> </span><span class="nc">CassetteSaveError</span><span class="p">(</span><span class="n">InterpositionError</span><span class="p">):</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when cassette persistence fails.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">            path: The file path where save failed</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">            cause: The underlying exception that caused the failure</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -6576,25 +6680,25 @@ Default is empty tuple.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/interposition/errors.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        path: The file path where save failed</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        cause: The underlying exception that caused the failure</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        path: The file path where save failed</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        cause: The underlying exception that caused the failure</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -8147,56 +8251,84 @@ The Broker calls save() automatically after recording new interactions.</p>
 <span class="normal"><a href="#__codelineno-0-60">60</a></span>
 <span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">JsonFileCassetteStore</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">JsonFileCassetteStore</span><span class="p">:</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;File-based cassette store using JSON format.</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16"></a>
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">        path: Path to the JSON file for cassette storage.</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create_if_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize store with file path.</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">            path: Path to the JSON file (will be created if doesn&#39;t exist).</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the file path.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">            create_if_missing: If True, load() returns an empty Cassette</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">                when the file doesn&#39;t exist instead of raising CassetteLoadError.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span> <span class="o">=</span> <span class="n">create_if_missing</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the file path.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        Returns:</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">            Cassette instance loaded from file.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        Raises:</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">            FileNotFoundError: If file doesn&#39;t exist.</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">            pydantic.ValidationError: If JSON is invalid.</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        Creates parent directories if they don&#39;t exist.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">            cassette: The cassette to persist.</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        Raises:</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">            CassetteSaveError: If file write fails.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        Returns:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">            Cassette instance loaded from file. If create_if_missing is True</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">            and the file doesn&#39;t exist, returns an empty Cassette.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        Raises:</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">            CassetteLoadError: If file doesn&#39;t exist (and create_if_missing</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">                is False), file is unreadable, or JSON is invalid.</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>            <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span><span class="p">:</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>                <span class="k">return</span> <span class="n">Cassette</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="p">())</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>            <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>            <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>            <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        Creates parent directories if they don&#39;t exist.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">            cassette: The cassette to persist.</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        Raises:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">            CassetteSaveError: If file write fails.</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>            <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>            <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -8245,7 +8377,9 @@ The Broker calls save() automatically after recording new interactions.</p>
 
 
 <a href="#interposition.stores.JsonFileCassetteStore.__init__" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">path</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create_if_missing</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8280,6 +8414,23 @@ The Broker calls save() automatically after recording new interactions.</p>
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>create_if_missing</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, load() returns an empty Cassette
+when the file doesn't exist instead of raising CassetteLoadError.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -8292,13 +8443,19 @@ The Broker calls save() automatically after recording new interactions.</p>
 <span class="normal"><a href="#__codelineno-0-24">24</a></span>
 <span class="normal"><a href="#__codelineno-0-25">25</a></span>
 <span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create_if_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize store with file path.</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">        path: Path to the JSON file (will be created if doesn&#39;t exist).</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        create_if_missing: If True, load() returns an empty Cassette</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">            when the file doesn&#39;t exist instead of raising CassetteLoadError.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span> <span class="o">=</span> <span class="n">create_if_missing</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -8336,7 +8493,17 @@ The Broker calls save() automatically after recording new interactions.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Cassette instance loaded from file.</p>
+                <p>Cassette instance loaded from file. If create_if_missing is True</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="interposition.models.Cassette" href="#interposition.models.Cassette">Cassette</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>and the file doesn't exist, returns an empty Cassette.</p>
               </div>
             </td>
           </tr>
@@ -8355,21 +8522,12 @@ The Broker calls save() automatically after recording new interactions.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+                  <code><span title="interposition.errors.CassetteLoadError">CassetteLoadError</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If file doesn't exist.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="pydantic.ValidationError">ValidationError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If JSON is invalid.</p>
+                <p>If file doesn't exist (and create_if_missing
+is False), file is unreadable, or JSON is invalid.</p>
               </div>
             </td>
           </tr>
@@ -8379,10 +8537,7 @@ The Broker calls save() automatically after recording new interactions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/interposition/stores.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-37">37</a></span>
 <span class="normal"><a href="#__codelineno-0-38">38</a></span>
 <span class="normal"><a href="#__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#__codelineno-0-40">40</a></span>
@@ -8390,18 +8545,43 @@ The Broker calls save() automatically after recording new interactions.</p>
 <span class="normal"><a href="#__codelineno-0-42">42</a></span>
 <span class="normal"><a href="#__codelineno-0-43">43</a></span>
 <span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">        Cassette instance loaded from file.</span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cassette</span><span class="p">:</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load cassette from JSON file.</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        FileNotFoundError: If file doesn&#39;t exist.</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        pydantic.ValidationError: If JSON is invalid.</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        Cassette instance loaded from file. If create_if_missing is True</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        and the file doesn&#39;t exist, returns an empty Cassette.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        CassetteLoadError: If file doesn&#39;t exist (and create_if_missing</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">            is False), file is unreadable, or JSON is invalid.</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_if_missing</span><span class="p">:</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="k">return</span> <span class="n">Cassette</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="p">())</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="k">return</span> <span class="n">Cassette</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">raise</span> <span class="n">CassetteLoadError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -8481,39 +8661,39 @@ The Broker calls save() automatically after recording new interactions.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/interposition/stores.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">    Creates parent directories if they don&#39;t exist.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        cassette: The cassette to persist.</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        CassetteSaveError: If file write fails.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cassette</span><span class="p">:</span> <span class="n">Cassette</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Save cassette to JSON file.</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    Creates parent directories if they don&#39;t exist.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        cassette: The cassette to persist.</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        CassetteSaveError: If file write fails.</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">json_str</span> <span class="o">=</span> <span class="n">cassette</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="k">raise</span> <span class="n">CassetteSaveError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -10025,31 +10205,31 @@ Default is empty tuple.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/interposition/errors.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="k">class</span><span class="w"> </span><span class="nc">CassetteSaveError</span><span class="p">(</span><span class="n">InterpositionError</span><span class="p">):</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when cassette persistence fails.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">            path: The file path where save failed</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">            cause: The underlying exception that caused the failure</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="k">class</span><span class="w"> </span><span class="nc">CassetteSaveError</span><span class="p">(</span><span class="n">InterpositionError</span><span class="p">):</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when cassette persistence fails.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">            path: The file path where save failed</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">            cause: The underlying exception that caused the failure</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -10131,25 +10311,25 @@ Default is empty tuple.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/interposition/errors.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        path: The file path where save failed</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        cause: The underlying exception that caused the failure</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cause</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize with the path and underlying cause.</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        path: The file path where save failed</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        cause: The underlying exception that caused the failure</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save cassette to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

@@ -2,74 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0000-adr-template/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0001-pydantic-for-data-models/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0002-sha256-fingerprinting/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0003-generator-streaming/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0004-first-match-strategy/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0005-cassette-index/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0006-external-adapters/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0007-broker-mode-parameter/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0008-literal-type-for-broker-mode/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0009-live-responder-port/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0010-record-buffering/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0011-cassette-store-persistence-port/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/adr/0012-cassette-save-failure-behavior/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/osoekawaitlab/interposition/adr/0013-cassette-store-load-missing-storage/</loc>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/api/api_reference/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/architecture/overview/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/guides/adapters/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/interposition/guides/specifications/</loc>
-         <lastmod>2026-02-01</lastmod>
+         <lastmod>2026-02-18</lastmod>
     </url>
 </urlset>

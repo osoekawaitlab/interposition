@@ -1306,6 +1306,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0013-cassette-store-load-missing-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0013: CassetteStore Load Behavior for Missing Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1914,7 +1942,7 @@
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Create store pointing to a JSON file</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">store</span> <span class="o">=</span> <span class="n">JsonFileCassetteStore</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;cassettes/my_test.json&quot;</span><span class="p">))</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Load existing cassette (raises FileNotFoundError if not exists)</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Load existing cassette (raises CassetteLoadError if not exists)</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">cassette</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Or start with empty cassette</span>
@@ -1931,67 +1959,85 @@
 <a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="c1"># After replay, cassette is automatically saved to file</span>
 <a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="n">response</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
 </code></pre></div>
+<p>By default, <code>load()</code> raises <code>CassetteLoadError</code> if the file doesn't exist. Use <code>create_if_missing=True</code> to return an empty cassette instead — useful for record/auto workflows where the file is created on first save:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">store</span> <span class="o">=</span> <span class="n">JsonFileCassetteStore</span><span class="p">(</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;cassettes/my_test.json&quot;</span><span class="p">),</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">create_if_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">cassette</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>  <span class="c1"># Returns empty Cassette if file doesn&#39;t exist</span>
+</code></pre></div>
 <p>The <code>JsonFileCassetteStore</code> creates parent directories automatically when saving.
 If saving fails, the error is propagated and response streaming stops (fail-fast).</p>
 <h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
 <p>All interposition exceptions inherit from <code>InterpositionError</code>, allowing you to catch all domain errors with a single handler:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterpositionError</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">except</span> <span class="n">InterpositionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interposition error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>InteractionNotFoundError</strong>: Raised when no matching interaction exists (in <code>replay</code> mode) or when <code>auto</code> mode has a cache miss without a configured <code>live_responder</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionNotFoundError</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterpositionError</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">unknown_request</span><span class="p">)</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">except</span> <span class="n">InteractionNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not recorded: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">except</span> <span class="n">InterpositionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interposition error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>InteractionNotFoundError</strong>: Raised when no matching interaction exists (in <code>replay</code> mode) or when <code>auto</code> mode has a cache miss without a configured <code>live_responder</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionNotFoundError</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">unknown_request</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">except</span> <span class="n">InteractionNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not recorded: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>LiveResponderRequiredError</strong>: Raised when <code>record</code> mode is used without a <code>live_responder</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiveResponderRequiredError</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">broker</span> <span class="o">=</span> <span class="n">Broker</span><span class="p">(</span><span class="n">cassette</span><span class="o">=</span><span class="n">cassette</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;record&quot;</span><span class="p">)</span>  <span class="c1"># No live_responder!</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="k">except</span> <span class="n">LiveResponderRequiredError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;live_responder required for </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiveResponderRequiredError</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">broker</span> <span class="o">=</span> <span class="n">Broker</span><span class="p">(</span><span class="n">cassette</span><span class="o">=</span><span class="n">cassette</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;record&quot;</span><span class="p">)</span>  <span class="c1"># No live_responder!</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">except</span> <span class="n">LiveResponderRequiredError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;live_responder required for </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>InteractionValidationError</strong>: Raised when an <code>Interaction</code> fails validation (e.g., fingerprint mismatch or invalid response chunk sequence):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">InteractionValidationError</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="c1"># This will fail: fingerprint doesn&#39;t match request</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">interaction</span> <span class="o">=</span> <span class="n">Interaction</span><span class="p">(</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>        <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="n">fingerprint</span><span class="o">=</span><span class="n">wrong_fingerprint</span><span class="p">,</span>  <span class="c1"># Mismatch!</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="n">response_chunks</span><span class="o">=</span><span class="n">chunks</span><span class="p">,</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="p">)</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="k">except</span> <span class="n">InteractionValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">InteractionValidationError</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="c1"># This will fail: fingerprint doesn&#39;t match request</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">interaction</span> <span class="o">=</span> <span class="n">Interaction</span><span class="p">(</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>        <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>        <span class="n">fingerprint</span><span class="o">=</span><span class="n">wrong_fingerprint</span><span class="p">,</span>  <span class="c1"># Mismatch!</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>        <span class="n">response_chunks</span><span class="o">=</span><span class="n">chunks</span><span class="p">,</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="p">)</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="k">except</span> <span class="n">InteractionValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>CassetteLoadError</strong>: Raised when <code>JsonFileCassetteStore.load()</code> fails (file not found, permission denied, corrupted JSON, etc.):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">CassetteLoadError</span><span class="p">,</span> <span class="n">JsonFileCassetteStore</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">store</span> <span class="o">=</span> <span class="n">JsonFileCassetteStore</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;cassettes/missing.json&quot;</span><span class="p">))</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">cassette</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">except</span> <span class="n">CassetteLoadError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load from </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">__cause__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>CassetteSaveError</strong>: Raised when <code>JsonFileCassetteStore.save()</code> fails due to I/O errors (permission denied, disk full, etc.):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">CassetteSaveError</span><span class="p">,</span> <span class="n">JsonFileCassetteStore</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">store</span> <span class="o">=</span> <span class="n">JsonFileCassetteStore</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/readonly/cassette.json&quot;</span><span class="p">))</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">cassette</span><span class="p">)</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">except</span> <span class="n">CassetteSaveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save to </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">__cause__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">CassetteSaveError</span><span class="p">,</span> <span class="n">JsonFileCassetteStore</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">store</span> <span class="o">=</span> <span class="n">JsonFileCassetteStore</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/readonly/cassette.json&quot;</span><span class="p">))</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="n">store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">cassette</span><span class="p">)</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="k">except</span> <span class="n">CassetteSaveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save to </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">__cause__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="version">Version<a class="headerlink" href="#version" title="Permanent link">&para;</a></h2>
 <p>Access the package version programmatically:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="k">if</span> <span class="n">__version__</span> <span class="o">&lt;</span> <span class="s2">&quot;0.2.0&quot;</span><span class="p">:</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Auto mode is not supported&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Auto mode is supported&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">if</span> <span class="n">__version__</span> <span class="o">&lt;</span> <span class="s2">&quot;0.2.0&quot;</span><span class="p">:</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Auto mode is not supported&quot;</span><span class="p">)</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Auto mode is supported&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
@@ -2000,13 +2046,13 @@ If saving fails, the error is propagated and response streaming stops (fail-fast
 <li><a href="https://github.com/astral-sh/uv">uv</a> (recommended)</li>
 </ul>
 <h3 id="setup-testing">Setup &amp; Testing<a class="headerlink" href="#setup-testing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Clone and install</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/osoekawaitlab/interposition.git
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nb">cd</span><span class="w"> </span>interposition
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>--group<span class="o">=</span>dev
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1"># Run tests</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Clone and install</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/osoekawaitlab/interposition.git
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nb">cd</span><span class="w"> </span>interposition
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>--group<span class="o">=</span>dev
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># Run tests</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests
 </code></pre></div>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>MIT</p>
