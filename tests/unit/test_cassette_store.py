@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from interposition.errors import CassetteSaveError, InterpositionError
+from interposition.errors import (
+    CassetteLoadError,
+    CassetteSaveError,
+    InterpositionError,
+)
 from interposition.models import Cassette
 from interposition.stores import JsonFileCassetteStore
 
@@ -63,13 +67,79 @@ class TestJsonFileCassetteStore:
 
         assert isinstance(loaded, Cassette)
 
-    def test_load_raises_file_not_found(self, tmp_path: Path) -> None:
-        """Test that load raises FileNotFoundError for missing file."""
+    def test_load_raises_cassette_load_error_for_missing_file(
+        self, tmp_path: Path
+    ) -> None:
+        """Test that load raises CassetteLoadError for missing file."""
         path = tmp_path / "nonexistent.json"
         store = JsonFileCassetteStore(path)
 
-        with pytest.raises(FileNotFoundError):
+        with pytest.raises(CassetteLoadError) as exc_info:
             store.load()
+
+        assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, FileNotFoundError)
+
+    def test_load_returns_empty_cassette_when_create_if_missing(
+        self, tmp_path: Path
+    ) -> None:
+        """Test load returns empty Cassette when file missing and create_if_missing."""
+        path = tmp_path / "nonexistent.json"
+        store = JsonFileCassetteStore(path, create_if_missing=True)
+
+        cassette = store.load()
+
+        assert isinstance(cassette, Cassette)
+        assert len(cassette.interactions) == 0
+
+    def test_load_raises_cassette_load_error_for_os_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Test that load wraps OSError in CassetteLoadError."""
+        path = tmp_path / "cassette.json"
+        path.write_text("{}", encoding="utf-8")
+        store = JsonFileCassetteStore(path)
+
+        msg = "Permission denied"
+
+        def _raise(*_args: object, **_kwargs: object) -> None:
+            raise PermissionError(msg)
+
+        monkeypatch.setattr(type(path), "read_text", _raise)
+
+        with pytest.raises(CassetteLoadError) as exc_info:
+            store.load()
+
+        assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, PermissionError)
+
+    def test_load_raises_cassette_load_error_for_corrupted_json(
+        self, tmp_path: Path
+    ) -> None:
+        """Test that load raises CassetteLoadError for invalid JSON."""
+        path = tmp_path / "cassette.json"
+        path.write_text("{corrupted json", encoding="utf-8")
+        store = JsonFileCassetteStore(path)
+
+        with pytest.raises(CassetteLoadError) as exc_info:
+            store.load()
+
+        assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, Exception)
+
+    def test_load_raises_for_corrupted_json_with_create_if_missing(
+        self, tmp_path: Path
+    ) -> None:
+        """Test corrupted JSON raises CassetteLoadError even with create_if_missing."""
+        path = tmp_path / "cassette.json"
+        path.write_text("{corrupted json", encoding="utf-8")
+        store = JsonFileCassetteStore(path, create_if_missing=True)
+
+        with pytest.raises(CassetteLoadError) as exc_info:
+            store.load()
+
+        assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, Exception)
 
     def test_roundtrip_serialization(
         self, tmp_path: Path, make_interaction: MakeInteractionProtocol
@@ -154,6 +224,42 @@ class TestJsonFileCassetteStore:
 
         with pytest.raises(CassetteSaveError, match=str(path)):
             store.save(cassette)
+
+
+class TestCassetteLoadError:
+    """Test suite for CassetteLoadError."""
+
+    def test_stores_path(self, tmp_path: Path) -> None:
+        """Test that exception stores the path."""
+        path = tmp_path / "cassette.json"
+        cause = FileNotFoundError("not found")
+        error = CassetteLoadError(path, cause)
+
+        assert error.path == path
+
+    def test_stores_cause(self, tmp_path: Path) -> None:
+        """Test that exception stores the original cause."""
+        path = tmp_path / "cassette.json"
+        cause = FileNotFoundError("not found")
+        error = CassetteLoadError(path, cause)
+
+        assert error.__cause__ is cause
+
+    def test_error_message_includes_path(self, tmp_path: Path) -> None:
+        """Test that error message includes the file path."""
+        path = tmp_path / "cassette.json"
+        cause = FileNotFoundError("not found")
+        error = CassetteLoadError(path, cause)
+
+        assert str(path) in str(error)
+
+    def test_inherits_from_interposition_error(self, tmp_path: Path) -> None:
+        """Test that CassetteLoadError inherits from InterpositionError."""
+        path = tmp_path / "cassette.json"
+        cause = FileNotFoundError("not found")
+        error = CassetteLoadError(path, cause)
+
+        assert isinstance(error, InterpositionError)
 
 
 class TestCassetteSaveError:

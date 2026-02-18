@@ -43,6 +43,21 @@ class LiveResponderRequiredError(InterpositionError):
         self.mode: str = mode
 
 
+class CassetteLoadError(InterpositionError):
+    """Raised when cassette loading fails."""
+
+    def __init__(self, path: Path, cause: Exception) -> None:
+        """Initialize with the path and underlying cause.
+
+        Args:
+            path: The file path where load failed
+            cause: The underlying exception that caused the failure
+        """
+        super().__init__(f"Failed to load cassette from {path}: {cause}")
+        self.path: Path = path
+        self.__cause__ = cause
+
+
 class CassetteSaveError(InterpositionError):
     """Raised when cassette persistence fails."""
 

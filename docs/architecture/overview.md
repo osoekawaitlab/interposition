@@ -97,3 +97,11 @@ Define CassetteStore as a Protocol port with load() and save() methods for stora
 **Status**: Accepted | **Date**: 2026-01-31
 
 Define fail-fast behavior when cassette persistence fails (save errors are propagated and response streaming stops).
+
+---
+
+### [ADR-0013: CassetteStore Load Behavior for Missing Storage](../adr/0013-cassette-store-load-missing-storage.md)
+
+**Status**: Accepted | **Date**: 2026-02-16
+
+Store implementations allow configuring missing-storage behavior at construction time: raise an error by default, or opt in to returning an empty cassette for record workflows.
