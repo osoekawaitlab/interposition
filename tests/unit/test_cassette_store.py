@@ -20,9 +20,6 @@ if TYPE_CHECKING:
     from tests.unit.conftest import MakeInteractionProtocol
 
 
-_PERMISSION_ERROR = PermissionError("Permission denied")
-
-
 class TestJsonFileCassetteStore:
     """Test suite for JsonFileCassetteStore."""
 
@@ -103,8 +100,10 @@ class TestJsonFileCassetteStore:
         path.write_text("{}", encoding="utf-8")
         store = JsonFileCassetteStore(path)
 
+        msg = "Permission denied"
+
         def _raise(*_args: object, **_kwargs: object) -> None:
-            raise _PERMISSION_ERROR
+            raise PermissionError(msg)
 
         monkeypatch.setattr(type(path), "read_text", _raise)
 
@@ -126,6 +125,7 @@ class TestJsonFileCassetteStore:
             store.load()
 
         assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, Exception)
 
     def test_load_raises_for_corrupted_json_with_create_if_missing(
         self, tmp_path: Path
@@ -139,6 +139,7 @@ class TestJsonFileCassetteStore:
             store.load()
 
         assert exc_info.value.path == path
+        assert isinstance(exc_info.value.__cause__, Exception)
 
     def test_roundtrip_serialization(
         self, tmp_path: Path, make_interaction: MakeInteractionProtocol

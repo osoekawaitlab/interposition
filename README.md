@@ -380,6 +380,20 @@ except InteractionValidationError as e:
     print(f"Validation failed: {e}")
 ```
 
+**CassetteLoadError**: Raised when `JsonFileCassetteStore.load()` fails (file not found, permission denied, corrupted JSON, etc.):
+
+```python
+from pathlib import Path
+from interposition import CassetteLoadError, JsonFileCassetteStore
+
+store = JsonFileCassetteStore(Path("cassettes/missing.json"))
+
+try:
+    cassette = store.load()
+except CassetteLoadError as e:
+    print(f"Failed to load from {e.path}: {e.__cause__}")
+```
+
 **CassetteSaveError**: Raised when `JsonFileCassetteStore.save()` fails due to I/O errors (permission denied, disk full, etc.):
 
 ```python
