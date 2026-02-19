@@ -87,6 +87,10 @@ class Broker:
 
         Returns:
             A new Broker instance with the loaded cassette.
+
+        Raises:
+            CassetteLoadError: When the store fails to load the cassette
+                (e.g., missing file, corrupted data).
         """
         cassette = cassette_store.load()
         return cls(
