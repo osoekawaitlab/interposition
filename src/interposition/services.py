@@ -11,6 +11,8 @@ from interposition.models import Cassette, Interaction
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
+    from typing_extensions import Self
+
     from interposition.models import InteractionRequest, ResponseChunk
 
 BrokerMode = Literal["replay", "record", "auto"]
@@ -77,7 +79,7 @@ class Broker:
         cassette_store: CassetteStore,
         mode: BrokerMode = "replay",
         live_responder: LiveResponder | None = None,
-    ) -> Broker:
+    ) -> Self:
         """Create a Broker by loading a cassette from a store.
 
         Args:
