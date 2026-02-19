@@ -324,6 +324,16 @@ store = JsonFileCassetteStore(
 cassette = store.load()  # Returns empty Cassette if file doesn't exist
 ```
 
+You can also use `Broker.from_store()` to load the cassette and create a broker in one step:
+
+```python
+store = JsonFileCassetteStore(
+    Path("cassettes/my_test.json"),
+    create_if_missing=True,
+)
+broker = Broker.from_store(store, mode="auto", live_responder=my_live_responder)
+```
+
 The `JsonFileCassetteStore` creates parent directories automatically when saving.
 If saving fails, the error is propagated and response streaming stops (fail-fast).
 

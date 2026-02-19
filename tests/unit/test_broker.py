@@ -431,6 +431,71 @@ class TestBrokerCassetteStore:
         assert len(broker.cassette.interactions) == 1
 
 
+class TestBrokerFromStore:
+    """Test suite for Broker.from_store() factory classmethod."""
+
+    def test_from_store_creates_broker_with_loaded_cassette(
+        self, make_interaction: MakeInteractionProtocol
+    ) -> None:
+        """Test that from_store loads cassette from store and creates Broker."""
+        interaction = make_interaction()
+        cassette = Cassette(interactions=(interaction,))
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return cassette
+
+            def save(self, cassette: Cassette) -> None:
+                pass
+
+        store = MockStore()
+        broker = Broker.from_store(store)
+
+        assert broker.cassette is cassette
+        assert broker.cassette_store is store
+        assert broker.mode == "replay"
+
+    def test_from_store_accepts_mode_parameter(self) -> None:
+        """Test that from_store passes mode to the Broker."""
+        cassette = Cassette(interactions=())
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return cassette
+
+            def save(self, cassette: Cassette) -> None:
+                pass
+
+        broker = Broker.from_store(MockStore(), mode="auto")
+
+        assert broker.mode == "auto"
+
+    def test_from_store_accepts_live_responder(
+        self, make_request: MakeRequestProtocol
+    ) -> None:
+        """Test that from_store passes live_responder to the Broker."""
+        cassette = Cassette(interactions=())
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return cassette
+
+            def save(self, cassette: Cassette) -> None:
+                pass
+
+        def mock_responder(_req: object) -> tuple[ResponseChunk, ...]:
+            return (ResponseChunk(data=b"live", sequence=0),)
+
+        broker = Broker.from_store(
+            MockStore(), mode="auto", live_responder=mock_responder
+        )
+        request = make_request()
+
+        chunks = list(broker.replay(request))
+
+        assert chunks[0].data == b"live"
+
+
 class TestInteractionNotFoundError:
     """Test suite for InteractionNotFoundError."""
 

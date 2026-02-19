@@ -11,6 +11,8 @@ from interposition.models import Cassette, Interaction
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
+    from typing_extensions import Self
+
     from interposition.models import InteractionRequest, ResponseChunk
 
 BrokerMode = Literal["replay", "record", "auto"]
@@ -70,6 +72,35 @@ class Broker:
         self._mode = mode
         self._live_responder = live_responder
         self._cassette_store = cassette_store
+
+    @classmethod
+    def from_store(
+        cls,
+        cassette_store: CassetteStore,
+        mode: BrokerMode = "replay",
+        live_responder: LiveResponder | None = None,
+    ) -> Self:
+        """Create a Broker by loading a cassette from a store.
+
+        Args:
+            cassette_store: The store to load the cassette from
+            mode: The broker mode (replay, record, or auto)
+            live_responder: Optional callable for upstream forwarding
+
+        Returns:
+            A new Broker instance with the loaded cassette.
+
+        Raises:
+            CassetteLoadError: When the store fails to load the cassette
+                (e.g., missing file, corrupted data).
+        """
+        cassette = cassette_store.load()
+        return cls(
+            cassette=cassette,
+            mode=mode,
+            live_responder=live_responder,
+            cassette_store=cassette_store,
+        )
 
     @property
     def cassette(self) -> Cassette:

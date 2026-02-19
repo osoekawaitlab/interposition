@@ -47,3 +47,21 @@
 * Write corrupted JSON to cassette file
 * Loading cassette from file store should raise CassetteLoadError
 * The original error should be accessible from CassetteLoadError
+
+## Broker created via from_store replays recorded interaction
+
+* Configure mock live responder returning "from-store-data"
+* Configure JSON file cassette store with create_if_missing at temporary path
+* Create broker from store in "record" mode
+* Broker replays request for "test-proto" "fetch" "resource-123"
+* Create broker from store in "replay" mode
+* Broker replays request for "test-proto" "fetch" "resource-123"
+* Response stream should contain "from-store-data"
+
+## Broker created via from_store with auto mode forwards MISS to live responder
+
+* Configure mock live responder returning "live-auto-data"
+* Configure JSON file cassette store with create_if_missing at temporary path
+* Create broker from store in "auto" mode
+* Broker replays request for "test-proto" "fetch" "resource-999"
+* Response stream should contain "live-auto-data"

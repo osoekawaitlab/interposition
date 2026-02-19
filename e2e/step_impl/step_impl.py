@@ -483,6 +483,43 @@ def broker_in_mode_with_store_receives_request(
         data_store.scenario["error"] = e
 
 
+@step("Create broker from store in <mode> mode")
+def create_broker_from_store(mode: str) -> None:
+    """Create a Broker using the from_store factory classmethod."""
+    cassette_store = cast(
+        "JsonFileCassetteStore", data_store.scenario["cassette_store"]
+    )
+    live_responder = cast(
+        "LiveResponder | None", data_store.scenario.get("live_responder")
+    )
+    broker = Broker.from_store(
+        cassette_store,
+        mode=cast("BrokerMode", mode),
+        live_responder=live_responder,
+    )
+    data_store.scenario["broker"] = broker
+
+
+@step("Broker replays request for <protocol> <action> <target>")
+def broker_replays_request(protocol: str, action: str, target: str) -> None:
+    """Replay a request using the broker stored in scenario data."""
+    broker = cast("Broker", data_store.scenario["broker"])
+    request = InteractionRequest(
+        protocol=protocol,
+        action=action,
+        target=target,
+        headers=(),
+        body=b"test-data",
+    )
+    try:
+        chunks = list(broker.replay(request))
+        data_store.scenario["response_chunks"] = chunks
+        data_store.scenario["error"] = None
+    except InteractionNotFoundError as e:
+        data_store.scenario["response_chunks"] = None
+        data_store.scenario["error"] = e
+
+
 @step("Cassette file should exist at configured path")
 def cassette_file_should_exist() -> None:
     """Verify that the cassette file exists."""
