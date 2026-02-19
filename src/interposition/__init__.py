@@ -5,6 +5,7 @@ Provides record, replay, and control capabilities.
 
 from interposition._version import __version__
 from interposition.errors import (
+    CassetteLoadError,
     CassetteSaveError,
     InteractionNotFoundError,
     InterpositionError,
@@ -25,6 +26,7 @@ __all__ = [
     "Broker",
     "BrokerMode",
     "Cassette",
+    "CassetteLoadError",
     "CassetteSaveError",
     "CassetteStore",
     "Interaction",

@@ -19,6 +19,35 @@
 * Broker in "replay" mode receives request for "test-proto" "fetch" "resource-123"
 * Response stream should contain "persisted-data"
 
+## Cassette store with create_if_missing loads empty cassette for non-existent file
+
+* Configure JSON file cassette store with create_if_missing at temporary path
+* Load cassette from file store
+* Cassette should have no interactions
+
+## Cassette store with create_if_missing supports save and reload roundtrip
+
+* Configure JSON file cassette store with create_if_missing at temporary path
+* Load cassette from file store
+* Cassette should have no interactions
+* Save interaction to cassette for "test-proto" "fetch" "resource-123"
+* Save cassette to file store
+* Load cassette from file store
+* Cassette should contain one recorded interaction
+
+## Cassette store raises CassetteLoadError for non-existent file
+
+* Configure JSON file cassette store at temporary path
+* Loading cassette from file store should raise CassetteLoadError
+* The original error should be accessible from CassetteLoadError
+
+## Cassette store raises CassetteLoadError for corrupted JSON file
+
+* Configure JSON file cassette store at temporary path
+* Write corrupted JSON to cassette file
+* Loading cassette from file store should raise CassetteLoadError
+* The original error should be accessible from CassetteLoadError
+
 ## Broker created via from_store replays recorded interaction
 
 * Create empty cassette
