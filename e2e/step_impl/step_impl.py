@@ -520,14 +520,6 @@ def broker_replays_request(protocol: str, action: str, target: str) -> None:
         data_store.scenario["error"] = e
 
 
-@step("Save current cassette to file store")
-def save_current_cassette_to_file_store() -> None:
-    """Save the current cassette to the configured file store."""
-    cassette = cast("Cassette", data_store.scenario["cassette"])
-    store = cast("JsonFileCassetteStore", data_store.scenario["cassette_store"])
-    store.save(cassette)
-
-
 @step("Cassette file should exist at configured path")
 def cassette_file_should_exist() -> None:
     """Verify that the cassette file exists."""
