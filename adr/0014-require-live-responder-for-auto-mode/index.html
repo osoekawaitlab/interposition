@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/guides/specifications/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/interposition/adr/0014-require-live-responder-for-auto-mode/">
       
       
-        <link rel="prev" href="../adapters/">
+        <link rel="prev" href="../0013-cassette-store-load-missing-storage/">
       
       
-        <link rel="next" href="../../architecture/overview/">
+        <link rel="next" href="../../api/api_reference/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Specifications - interposition</title>
+        <title>ADR 0014: Require live_responder for Auto and Record Modes at Construction - interposition</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#specifications" class="md-skip">
+        <a href="#adr-0014-require-live_responder-for-auto-and-record-modes-at-construction" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Specifications
+              ADR 0014: Require live_responder for Auto and Record Modes at Construction
             
           </span>
         </div>
@@ -244,13 +244,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adapters/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../guides/adapters/" class="md-tabs__link">
           
   
   
@@ -266,10 +264,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../../architecture/overview/" class="md-tabs__link">
           
   
@@ -377,31 +377,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -419,7 +416,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -437,7 +434,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adapters/" class="md-nav__link">
+      <a href="../../guides/adapters/" class="md-nav__link">
         
   
   
@@ -462,19 +459,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../guides/specifications/" class="md-nav__link">
         
   
   
@@ -490,7 +478,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -507,28 +494,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -546,7 +536,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -589,28 +579,31 @@
                 
   
   
+    
   
   
+  
     
     
     
     
       
       
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
         
           
+          
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
             
   
   
@@ -628,7 +621,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -646,7 +639,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0000-adr-template/" class="md-nav__link">
+      <a href="../0000-adr-template/" class="md-nav__link">
         
   
   
@@ -674,7 +667,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0001-pydantic-for-data-models/" class="md-nav__link">
+      <a href="../0001-pydantic-for-data-models/" class="md-nav__link">
         
   
   
@@ -702,7 +695,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0002-sha256-fingerprinting/" class="md-nav__link">
+      <a href="../0002-sha256-fingerprinting/" class="md-nav__link">
         
   
   
@@ -730,7 +723,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0003-generator-streaming/" class="md-nav__link">
+      <a href="../0003-generator-streaming/" class="md-nav__link">
         
   
   
@@ -758,7 +751,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0004-first-match-strategy/" class="md-nav__link">
+      <a href="../0004-first-match-strategy/" class="md-nav__link">
         
   
   
@@ -786,7 +779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0005-cassette-index/" class="md-nav__link">
+      <a href="../0005-cassette-index/" class="md-nav__link">
         
   
   
@@ -814,7 +807,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0006-external-adapters/" class="md-nav__link">
+      <a href="../0006-external-adapters/" class="md-nav__link">
         
   
   
@@ -842,7 +835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0007-broker-mode-parameter/" class="md-nav__link">
+      <a href="../0007-broker-mode-parameter/" class="md-nav__link">
         
   
   
@@ -870,7 +863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0008-literal-type-for-broker-mode/" class="md-nav__link">
+      <a href="../0008-literal-type-for-broker-mode/" class="md-nav__link">
         
   
   
@@ -898,7 +891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0009-live-responder-port/" class="md-nav__link">
+      <a href="../0009-live-responder-port/" class="md-nav__link">
         
   
   
@@ -926,7 +919,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0010-record-buffering/" class="md-nav__link">
+      <a href="../0010-record-buffering/" class="md-nav__link">
         
   
   
@@ -954,7 +947,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0011-cassette-store-persistence-port/" class="md-nav__link">
+      <a href="../0011-cassette-store-persistence-port/" class="md-nav__link">
         
   
   
@@ -982,7 +975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0012-cassette-save-failure-behavior/" class="md-nav__link">
+      <a href="../0012-cassette-save-failure-behavior/" class="md-nav__link">
         
   
   
@@ -1010,7 +1003,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0013-cassette-store-load-missing-storage/" class="md-nav__link">
+      <a href="../0013-cassette-store-load-missing-storage/" class="md-nav__link">
         
   
   
@@ -1035,10 +1028,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../adr/0014-require-live-responder-for-auto-mode/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0014: Require live_responder for Auto and Record Modes at Construction
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1054,6 +1074,181 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rationale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-existing-deferred-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep Existing Deferred Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#require-live_responder-for-record-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require live_responder for Record Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Direction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1121,6 +1316,169 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rationale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-existing-deferred-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep Existing Deferred Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#require-live_responder-for-record-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require live_responder for Record Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Direction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1139,94 +1497,74 @@
   
 
 
-<h1 id="specifications">Specifications<a class="headerlink" href="#specifications" title="Permanent link">&para;</a></h1>
-<p>This page shows the executable specifications (E2E tests) for interposition.
-These specifications serve as living documentation - they are always in sync with the actual behavior.</p>
-<h1 id="record-specification">Record specification<a class="headerlink" href="#record-specification" title="Permanent link">&para;</a></h1>
-<h2 id="broker-raises-error-for-miss-in-replay-mode">Broker raises error for MISS in replay mode<a class="headerlink" href="#broker-raises-error-for-miss-in-replay-mode" title="Permanent link">&para;</a></h2>
+<h1 id="adr-0014-require-live_responder-for-auto-and-record-modes-at-construction">ADR 0014: Require live_responder for Auto and Record Modes at Construction<a class="headerlink" href="#adr-0014-require-live_responder-for-auto-and-record-modes-at-construction" title="Permanent link">&para;</a></h1>
+<h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
+<p>Accepted</p>
+<h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
+<p>2026-02-25</p>
+<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<p><code>Broker</code> supports three modes:</p>
+<ol>
+<li><code>replay</code>: replay from cassette only</li>
+<li><code>record</code>: always forward to live upstream and record</li>
+<li><code>auto</code>: replay on HIT, forward-and-record on MISS</li>
+</ol>
+<p>Before this decision, <code>Broker</code> could be constructed in <code>auto</code> (and <code>record</code>) mode without <code>live_responder</code>. In those cases, errors surfaced later during request handling when forwarding was needed.</p>
+<p>This allowed a partially valid runtime configuration and delayed misconfiguration detection. The project prioritizes deterministic testing and fail-fast behavior, so configuration errors should be detected as early as possible.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><code>Broker</code> must enforce <code>live_responder</code> availability at construction time for both <code>record</code> and <code>auto</code> modes.</p>
 <ul>
-<li>Create empty cassette</li>
-<li>Broker in "replay" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Broker should raise InteractionNotFoundError</li>
+<li>If <code>mode</code> is <code>record</code> or <code>auto</code> and <code>live_responder</code> is <code>None</code>, raise <code>LiveResponderRequiredError(mode)</code> from <code>Broker.__init__</code>.</li>
+<li><code>Broker.from_store(...)</code> inherits the same invariant by constructing through <code>Broker.__init__</code>.</li>
+<li><code>replay</code> mode continues to allow <code>live_responder=None</code>.</li>
 </ul>
-<h2 id="broker-requires-live-responder-in-auto-mode">Broker requires live responder in auto mode<a class="headerlink" href="#broker-requires-live-responder-in-auto-mode" title="Permanent link">&para;</a></h2>
+<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Create empty cassette</li>
-<li>Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Broker should raise LiveResponderRequiredError</li>
+<li><strong>Fail-fast configuration validation</strong>: invalid mode/responder combinations are rejected immediately.</li>
+<li><strong>Determinism-first behavior</strong>: avoids hidden runtime branches where missing upstream configuration appears only under specific traffic patterns.</li>
+<li><strong>Consistent mode contract</strong>: both forwarding-capable modes (<code>record</code>, <code>auto</code>) require forwarding capability at setup time.</li>
+<li><strong>Operational clarity</strong>: users preparing <code>auto</code> for cassette extension workflows are required to wire upstream explicitly.</li>
 </ul>
-<h2 id="broker-requires-live-responder-in-record-mode">Broker requires live responder in record mode<a class="headerlink" href="#broker-requires-live-responder-in-record-mode" title="Permanent link">&para;</a></h2>
+<h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
+<h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Create empty cassette</li>
-<li>Broker in "record" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Broker should raise LiveResponderRequiredError</li>
+<li>Misconfiguration is caught at broker creation, not during replay.</li>
+<li>API behavior is stricter and easier to reason about in tests and CI.</li>
+<li>E2E and unit tests can assert configuration validity directly.</li>
 </ul>
-<h2 id="broker-forwards-miss-to-live-upstream-in-auto-mode">Broker forwards MISS to live upstream in auto mode<a class="headerlink" href="#broker-forwards-miss-to-live-upstream-in-auto-mode" title="Permanent link">&para;</a></h2>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Create empty cassette</li>
-<li>Configure mock live responder returning "live-response-data"</li>
-<li>Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Response stream should contain "live-response-data"</li>
-<li>Cassette should contain one recorded interaction</li>
+<li><strong>Breaking change</strong>: existing <code>auto</code> usages that relied on replay-only HIT paths without a <code>live_responder</code> will fail at initialization (mitigation: document this clearly in release notes and migration guidance, with before/after examples).</li>
+<li>Slightly reduced flexibility for niche <code>auto</code> scenarios that never MISS (mitigation: use <code>replay</code> mode for pure replay workflows, and reserve <code>auto</code> for cache-extend workflows with upstream configured).</li>
 </ul>
-<h2 id="broker-forwards-miss-to-live-upstream-in-record-mode">Broker forwards MISS to live upstream in record mode<a class="headerlink" href="#broker-forwards-miss-to-live-upstream-in-record-mode" title="Permanent link">&para;</a></h2>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="keep-existing-deferred-validation">Keep Existing Deferred Validation<a class="headerlink" href="#keep-existing-deferred-validation" title="Permanent link">&para;</a></h3>
+<p>Allow <code>auto</code> without <code>live_responder</code> and fail only on MISS.</p>
 <ul>
-<li>Create empty cassette</li>
-<li>Configure mock live responder returning "live-response-data"</li>
-<li>Broker in "record" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Response stream should contain "live-response-data"</li>
-<li>Cassette should contain one recorded interaction</li>
+<li><strong>Key characteristics</strong>: validation deferred to request handling path.</li>
+<li><strong>Pros</strong>: supports replay-only HIT flows in <code>auto</code> mode.</li>
+<li><strong>Cons</strong>: weakens fail-fast guarantees and leaves invalid configuration undetected until runtime.</li>
+<li><strong>Reason for rejection</strong>: conflicts with determinism-first and fail-fast direction.</li>
 </ul>
-<h2 id="broker-does-not-forward-hit-in-auto-mode">Broker does not forward HIT in auto mode<a class="headerlink" href="#broker-does-not-forward-hit-in-auto-mode" title="Permanent link">&para;</a></h2>
+<h3 id="require-live_responder-for-record-only">Require live_responder for Record Only<a class="headerlink" href="#require-live_responder-for-record-only" title="Permanent link">&para;</a></h3>
+<p>Keep <code>record</code> strict, leave <code>auto</code> deferred.</p>
 <ul>
-<li>Create cassette with recorded interaction for "test-proto" "fetch" "resource-123"</li>
-<li>Configure tracking live responder returning "live-response-data"</li>
-<li>Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Response stream should contain recorded chunks in order</li>
-<li>Live responder should not be called</li>
+<li><strong>Key characteristics</strong>: mixed validation semantics by mode.</li>
+<li><strong>Pros</strong>: preserves <code>auto</code> flexibility.</li>
+<li><strong>Cons</strong>: inconsistent validation model across forwarding-capable modes.</li>
+<li><strong>Reason for rejection</strong>: inconsistent API contracts increase cognitive load and hide misconfiguration.</li>
 </ul>
-<h2 id="broker-always-forwards-to-live-in-record-mode-even-on-hit">Broker always forwards to live in record mode even on HIT<a class="headerlink" href="#broker-always-forwards-to-live-in-record-mode-even-on-hit" title="Permanent link">&para;</a></h2>
+<h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Create cassette with recorded interaction for "test-proto" "fetch" "resource-123"</li>
-<li>Configure tracking live responder returning "fresh-live-data"</li>
-<li>Broker in "record" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Live responder should be called</li>
-<li>Response stream should contain "fresh-live-data"</li>
+<li>Update release notes to mark this as a breaking change in <code>0.6.0</code>.</li>
+<li>Ensure adapter examples and any external integrations configure <code>live_responder</code> whenever <code>auto</code> or <code>record</code> mode is used.</li>
+<li>Revisit this decision only if a non-forwarding variant of <code>auto</code> is intentionally introduced as a separate mode with explicit semantics.</li>
 </ul>
-<h2 id="recorded-cassette-can-be-serialized-and-replayed">Recorded cassette can be serialized and replayed<a class="headerlink" href="#recorded-cassette-can-be-serialized-and-replayed" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Create empty cassette</li>
-<li>Configure mock live responder returning "recorded-data"</li>
-<li>Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Serialize and deserialize cassette</li>
-<li>Broker in "replay" mode receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Response stream should contain "recorded-data"</li>
-</ul>
-<h1 id="replay-specification">Replay specification<a class="headerlink" href="#replay-specification" title="Permanent link">&para;</a></h1>
-<h2 id="broker-replays-matching-interaction">Broker replays matching interaction<a class="headerlink" href="#broker-replays-matching-interaction" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create cassette with recorded interaction for "test-proto" "fetch" "resource-123"</li>
-<li>Broker receives identical request for "test-proto" "fetch" "resource-123"</li>
-<li>Response stream should contain recorded chunks in order</li>
-<li>Response stream should complete without errors</li>
-</ul>
-<h2 id="broker-raises-error-for-unmatched-request">Broker raises error for unmatched request<a class="headerlink" href="#broker-raises-error-for-unmatched-request" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create cassette with recorded interaction for "test-proto" "fetch" "resource-123"</li>
-<li>Broker receives different request for "test-proto" "store" "resource-456"</li>
-<li>Broker should raise InteractionNotFoundError</li>
-</ul>
-<h2 id="broker-returns-first-matching-interaction">Broker returns first matching interaction<a class="headerlink" href="#broker-returns-first-matching-interaction" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create cassette with two identical interactions for "test-proto" "fetch" "resource-123"</li>
-<li>Broker receives request for "test-proto" "fetch" "resource-123"</li>
-<li>Response stream should contain chunks from FIRST recorded interaction</li>
-</ul>
-<h2 id="broker-treats-header-order-as-significant">Broker treats header order as significant<a class="headerlink" href="#broker-treats-header-order-as-significant" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create cassette with recorded interaction headers "X-First:1,X-Second:2"</li>
-<li>Broker receives request with headers "X-Second:2,X-First:1"</li>
-<li>Broker should raise InteractionNotFoundError</li>
+<li><a href="../0007-broker-mode-parameter/">ADR-0007: Broker Mode Parameter for Record Functionality</a></li>
+<li><a href="../0009-live-responder-port/">ADR-0009: LiveResponder Port for Upstream Forwarding</a></li>
+<li><a href="../0012-cassette-save-failure-behavior/">ADR-0012: Cassette Save Failure Behavior</a></li>
 </ul>
 
 

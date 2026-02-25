@@ -1334,6 +1334,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0014-require-live-responder-for-auto-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0014: Require live_responder for Auto and Record Modes at Construction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1984,7 +2012,7 @@ If saving fails, the error is propagated and response streaming stops (fail-fast
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">except</span> <span class="n">InterpositionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interposition error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>InteractionNotFoundError</strong>: Raised when no matching interaction exists (in <code>replay</code> mode) or when <code>auto</code> mode has a cache miss without a configured <code>live_responder</code>:</p>
+<p><strong>InteractionNotFoundError</strong>: Raised when no matching interaction exists in <code>replay</code> mode:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionNotFoundError</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">try</span><span class="p">:</span>
@@ -1992,15 +2020,13 @@ If saving fails, the error is propagated and response streaming stops (fail-fast
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">except</span> <span class="n">InteractionNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not recorded: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>LiveResponderRequiredError</strong>: Raised when <code>record</code> mode is used without a <code>live_responder</code>:</p>
+<p><strong>LiveResponderRequiredError</strong>: Raised at broker construction when <code>record</code> or <code>auto</code> mode is used without a <code>live_responder</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiveResponderRequiredError</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">broker</span> <span class="o">=</span> <span class="n">Broker</span><span class="p">(</span><span class="n">cassette</span><span class="o">=</span><span class="n">cassette</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;record&quot;</span><span class="p">)</span>  <span class="c1"># No live_responder!</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">broker</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">except</span> <span class="n">LiveResponderRequiredError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;live_responder required for </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">Broker</span><span class="p">(</span><span class="n">cassette</span><span class="o">=</span><span class="n">cassette</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>  <span class="c1"># No live_responder!</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">except</span> <span class="n">LiveResponderRequiredError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;live_responder required for </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>InteractionValidationError</strong>: Raised when an <code>Interaction</code> fails validation (e.g., fingerprint mismatch or invalid response chunk sequence):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">interposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">InteractionValidationError</span>

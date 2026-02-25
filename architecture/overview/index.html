@@ -768,6 +768,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0014-require-live_responder-for-auto-and-record-modes-at-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0014: Require live_responder for Auto and Record Modes at Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1231,6 +1242,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0014-require-live-responder-for-auto-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 0014: Require live_responder for Auto and Record Modes at Construction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1454,6 +1493,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0014-require-live_responder-for-auto-and-record-modes-at-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADR-0014: Require live_responder for Auto and Record Modes at Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1533,6 +1583,10 @@
 <h3 id="adr-0013-cassettestore-load-behavior-for-missing-storage"><a href="../../adr/0013-cassette-store-load-missing-storage/">ADR-0013: CassetteStore Load Behavior for Missing Storage</a><a class="headerlink" href="#adr-0013-cassettestore-load-behavior-for-missing-storage" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-02-16</p>
 <p>Store implementations allow configuring missing-storage behavior at construction time: raise an error by default, or opt in to returning an empty cassette for record workflows.</p>
+<hr />
+<h3 id="adr-0014-require-live_responder-for-auto-and-record-modes-at-construction"><a href="../../adr/0014-require-live-responder-for-auto-mode/">ADR-0014: Require live_responder for Auto and Record Modes at Construction</a><a class="headerlink" href="#adr-0014-require-live_responder-for-auto-and-record-modes-at-construction" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted | <strong>Date</strong>: 2026-02-25</p>
+<p>Broker initialization now enforces that <code>record</code> and <code>auto</code> modes must be configured with a <code>live_responder</code>, providing fail-fast validation for deterministic workflows.</p>
 
 
 
