@@ -6,6 +6,18 @@
 * Broker in "replay" mode receives request for "test-proto" "fetch" "resource-123"
 * Broker should raise InteractionNotFoundError
 
+## Broker requires live responder in auto mode
+
+* Create empty cassette
+* Broker in "auto" mode receives request for "test-proto" "fetch" "resource-123"
+* Broker should raise LiveResponderRequiredError
+
+## Broker requires live responder in record mode
+
+* Create empty cassette
+* Broker in "record" mode receives request for "test-proto" "fetch" "resource-123"
+* Broker should raise LiveResponderRequiredError
+
 ## Broker forwards MISS to live upstream in auto mode
 
 * Create empty cassette

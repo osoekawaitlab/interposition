@@ -149,27 +149,19 @@ class TestBroker:
         assert responder_called is True
         assert chunks[0].data == b"fresh"
 
-    def test_replay_raises_when_live_responder_missing_in_auto_mode(
-        self, make_request: MakeRequestProtocol
-    ) -> None:
-        """Test that auto mode MISS raises without live responder."""
+    def test_init_raises_when_live_responder_missing_in_auto_mode(self) -> None:
+        """Test that auto mode requires live_responder at construction."""
         cassette = Cassette(interactions=())
-        request = make_request()
-        broker = Broker(cassette=cassette, mode="auto")
 
-        with pytest.raises(InteractionNotFoundError, match="No matching interaction"):
-            list(broker.replay(request))
+        with pytest.raises(LiveResponderRequiredError, match="auto mode"):
+            Broker(cassette=cassette, mode="auto")
 
-    def test_replay_raises_when_live_responder_missing_in_record_mode(
-        self, make_request: MakeRequestProtocol
-    ) -> None:
-        """Test that record mode raises without live responder."""
+    def test_init_raises_when_live_responder_missing_in_record_mode(self) -> None:
+        """Test that record mode requires live_responder at construction."""
         cassette = Cassette(interactions=())
-        request = make_request()
-        broker = Broker(cassette=cassette, mode="record")
 
         with pytest.raises(LiveResponderRequiredError, match="record mode"):
-            list(broker.replay(request))
+            Broker(cassette=cassette, mode="record")
 
     def test_replay_returns_chunks_for_matching_request(
         self, make_interaction: MakeInteractionProtocol
@@ -466,9 +458,9 @@ class TestBrokerFromStore:
             def save(self, cassette: Cassette) -> None:
                 pass
 
-        broker = Broker.from_store(MockStore(), mode="auto")
+        broker = Broker.from_store(MockStore(), mode="replay")
 
-        assert broker.mode == "auto"
+        assert broker.mode == "replay"
 
     def test_from_store_accepts_live_responder(
         self, make_request: MakeRequestProtocol
@@ -494,6 +486,36 @@ class TestBrokerFromStore:
         chunks = list(broker.replay(request))
 
         assert chunks[0].data == b"live"
+
+    def test_from_store_raises_when_live_responder_missing_in_auto_mode(self) -> None:
+        """Test that from_store enforces live_responder in auto mode."""
+        cassette = Cassette(interactions=())
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return cassette
+
+            def save(self, cassette: Cassette) -> None:
+                pass
+
+        with pytest.raises(LiveResponderRequiredError, match="auto mode"):
+            Broker.from_store(MockStore(), mode="auto")
+
+    def test_from_store_raises_when_live_responder_missing_in_record_mode(
+        self,
+    ) -> None:
+        """Test that from_store enforces live_responder in record mode."""
+        cassette = Cassette(interactions=())
+
+        class MockStore:
+            def load(self) -> Cassette:
+                return cassette
+
+            def save(self, cassette: Cassette) -> None:
+                pass
+
+        with pytest.raises(LiveResponderRequiredError, match="record mode"):
+            Broker.from_store(MockStore(), mode="record")
 
 
 class TestInteractionNotFoundError:

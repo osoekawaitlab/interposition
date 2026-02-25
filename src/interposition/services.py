@@ -68,6 +68,9 @@ class Broker:
             live_responder: Optional callable for upstream forwarding
             cassette_store: Optional store for automatic cassette persistence
         """
+        if mode in ("record", "auto") and live_responder is None:
+            raise LiveResponderRequiredError(mode)
+
         self._cassette = cassette
         self._mode = mode
         self._live_responder = live_responder
@@ -133,10 +136,7 @@ class Broker:
 
         Raises:
             InteractionNotFoundError: When no matching interaction exists
-                and mode is replay, or when mode is auto but no
-                live_responder is configured.
-            LiveResponderRequiredError: When mode is record but no
-                live_responder is configured.
+                and mode is replay.
         """
         # record mode: always forward to live, ignore cassette
         if self._mode == "record":
@@ -168,15 +168,10 @@ class Broker:
             ResponseChunks from live responder
 
         Raises:
-            LiveResponderRequiredError: When live_responder is not configured
-                and mode is record.
-            InteractionNotFoundError: When live_responder is not configured
-                and mode is auto.
+            LiveResponderRequiredError: When live_responder is not configured.
         """
         if self._live_responder is None:
-            if self._mode == "record":
-                raise LiveResponderRequiredError(self._mode)
-            raise InteractionNotFoundError(request)
+            raise LiveResponderRequiredError(self._mode)
 
         chunks = tuple(self._live_responder(request))
         self._record_interaction(request, chunks)

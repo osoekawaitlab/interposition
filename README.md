@@ -350,7 +350,7 @@ except InterpositionError as e:
     print(f"Interposition error: {e}")
 ```
 
-**InteractionNotFoundError**: Raised when no matching interaction exists (in `replay` mode) or when `auto` mode has a cache miss without a configured `live_responder`:
+**InteractionNotFoundError**: Raised when no matching interaction exists in `replay` mode:
 
 ```python
 from interposition import InteractionNotFoundError
@@ -361,15 +361,13 @@ except InteractionNotFoundError as e:
     print(f"Not recorded: {e.request.target}")
 ```
 
-**LiveResponderRequiredError**: Raised when `record` mode is used without a `live_responder`:
+**LiveResponderRequiredError**: Raised at broker construction when `record` or `auto` mode is used without a `live_responder`:
 
 ```python
 from interposition import LiveResponderRequiredError
 
-broker = Broker(cassette=cassette, mode="record")  # No live_responder!
-
 try:
-    broker.replay(request)
+    Broker(cassette=cassette, mode="auto")  # No live_responder!
 except LiveResponderRequiredError as e:
     print(f"live_responder required for {e.mode} mode")
 ```
