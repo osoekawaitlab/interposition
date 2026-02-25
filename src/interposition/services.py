@@ -49,7 +49,8 @@ class Broker:
     Attributes:
         cassette: The cassette containing recorded interactions
         mode: The broker mode (replay, record, or auto)
-        live_responder: Optional callable for upstream forwarding
+        live_responder: Callable for upstream forwarding. Required when mode is
+            record or auto; optional in replay mode.
         cassette_store: Optional store for cassette persistence
     """
 
@@ -65,8 +66,13 @@ class Broker:
         Args:
             cassette: The cassette containing recorded interactions
             mode: The broker mode (replay, record, or auto)
-            live_responder: Optional callable for upstream forwarding
+            live_responder: Callable for upstream forwarding. Required when
+                mode is record or auto.
             cassette_store: Optional store for automatic cassette persistence
+
+        Raises:
+            LiveResponderRequiredError: When mode is record or auto and
+                live_responder is not configured.
         """
         if mode in ("record", "auto") and live_responder is None:
             raise LiveResponderRequiredError(mode)
@@ -88,7 +94,8 @@ class Broker:
         Args:
             cassette_store: The store to load the cassette from
             mode: The broker mode (replay, record, or auto)
-            live_responder: Optional callable for upstream forwarding
+            live_responder: Callable for upstream forwarding. Required when
+                mode is record or auto.
 
         Returns:
             A new Broker instance with the loaded cassette.
@@ -96,6 +103,8 @@ class Broker:
         Raises:
             CassetteLoadError: When the store fails to load the cassette
                 (e.g., missing file, corrupted data).
+            LiveResponderRequiredError: When mode is record or auto and
+                live_responder is not configured.
         """
         cassette = cassette_store.load()
         return cls(
