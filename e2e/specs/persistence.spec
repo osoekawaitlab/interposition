@@ -65,3 +65,9 @@
 * Create broker from store in "auto" mode
 * Broker replays request for "test-proto" "fetch" "resource-999"
 * Response stream should contain "live-auto-data"
+
+## Broker created via from_store requires live responder in auto mode
+
+* Configure JSON file cassette store with create_if_missing at temporary path
+* Create broker from store in "auto" mode
+* Broker should raise LiveResponderRequiredError

@@ -16,6 +16,7 @@ from interposition import (
     InteractionNotFoundError,
     InteractionRequest,
     JsonFileCassetteStore,
+    LiveResponderRequiredError,
     ResponseChunk,
 )
 
@@ -133,6 +134,19 @@ def broker_should_raise_error() -> None:
     assert error is not None, "Expected InteractionNotFoundError but got none"
     assert isinstance(error, InteractionNotFoundError), (
         f"Expected InteractionNotFoundError, got {type(error).__name__}"
+    )
+
+
+@step("Broker should raise LiveResponderRequiredError")
+def broker_should_raise_live_responder_required_error() -> None:
+    """Verify LiveResponderRequiredError was raised."""
+    error = cast(
+        "InteractionNotFoundError | LiveResponderRequiredError | None",
+        data_store.scenario.get("error"),
+    )
+    assert error is not None, "Expected LiveResponderRequiredError but got none"
+    assert isinstance(error, LiveResponderRequiredError), (
+        f"Expected LiveResponderRequiredError, got {type(error).__name__}"
     )
 
 
@@ -294,25 +308,25 @@ def broker_in_mode_receives_request(
     live_responder = cast(
         "LiveResponder | None", data_store.scenario.get("live_responder")
     )
-    broker = Broker(
-        cassette=cassette,
-        mode=cast("BrokerMode", mode),
-        live_responder=live_responder,
-    )
-    request = InteractionRequest(
-        protocol=protocol,
-        action=action,
-        target=target,
-        headers=(),
-        body=b"test-data",
-    )
     try:
+        broker = Broker(
+            cassette=cassette,
+            mode=cast("BrokerMode", mode),
+            live_responder=live_responder,
+        )
+        request = InteractionRequest(
+            protocol=protocol,
+            action=action,
+            target=target,
+            headers=(),
+            body=b"test-data",
+        )
         chunks = list(broker.replay(request))
         data_store.scenario["response_chunks"] = chunks
         data_store.scenario["error"] = None
         # Update cassette reference after replay (may have been modified)
         data_store.scenario["cassette"] = broker.cassette
-    except InteractionNotFoundError as e:
+    except (InteractionNotFoundError, LiveResponderRequiredError) as e:
         data_store.scenario["response_chunks"] = None
         data_store.scenario["error"] = e
 
@@ -460,25 +474,25 @@ def broker_in_mode_with_store_receives_request(
     cassette_store = cast(
         "JsonFileCassetteStore", data_store.scenario["cassette_store"]
     )
-    broker = Broker(
-        cassette=cassette,
-        mode=cast("BrokerMode", mode),
-        live_responder=live_responder,
-        cassette_store=cassette_store,
-    )
-    request = InteractionRequest(
-        protocol=protocol,
-        action=action,
-        target=target,
-        headers=(),
-        body=b"test-data",
-    )
     try:
+        broker = Broker(
+            cassette=cassette,
+            mode=cast("BrokerMode", mode),
+            live_responder=live_responder,
+            cassette_store=cassette_store,
+        )
+        request = InteractionRequest(
+            protocol=protocol,
+            action=action,
+            target=target,
+            headers=(),
+            body=b"test-data",
+        )
         chunks = list(broker.replay(request))
         data_store.scenario["response_chunks"] = chunks
         data_store.scenario["error"] = None
         data_store.scenario["cassette"] = broker.cassette
-    except InteractionNotFoundError as e:
+    except (InteractionNotFoundError, LiveResponderRequiredError) as e:
         data_store.scenario["response_chunks"] = None
         data_store.scenario["error"] = e
 
@@ -492,18 +506,25 @@ def create_broker_from_store(mode: str) -> None:
     live_responder = cast(
         "LiveResponder | None", data_store.scenario.get("live_responder")
     )
-    broker = Broker.from_store(
-        cassette_store,
-        mode=cast("BrokerMode", mode),
-        live_responder=live_responder,
-    )
-    data_store.scenario["broker"] = broker
+    try:
+        broker = Broker.from_store(
+            cassette_store,
+            mode=cast("BrokerMode", mode),
+            live_responder=live_responder,
+        )
+        data_store.scenario["broker"] = broker
+        data_store.scenario["error"] = None
+    except LiveResponderRequiredError as e:
+        data_store.scenario["broker"] = None
+        data_store.scenario["error"] = e
 
 
 @step("Broker replays request for <protocol> <action> <target>")
 def broker_replays_request(protocol: str, action: str, target: str) -> None:
     """Replay a request using the broker stored in scenario data."""
-    broker = cast("Broker", data_store.scenario["broker"])
+    broker = cast("Broker | None", data_store.scenario.get("broker"))
+    if broker is None:
+        return
     request = InteractionRequest(
         protocol=protocol,
         action=action,

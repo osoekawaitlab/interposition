@@ -105,3 +105,11 @@ Define fail-fast behavior when cassette persistence fails (save errors are propa
 **Status**: Accepted | **Date**: 2026-02-16
 
 Store implementations allow configuring missing-storage behavior at construction time: raise an error by default, or opt in to returning an empty cassette for record workflows.
+
+---
+
+### [ADR-0014: Require live_responder for Auto and Record Modes at Construction](../adr/0014-require-live-responder-for-auto-mode.md)
+
+**Status**: Accepted | **Date**: 2026-02-25
+
+Broker initialization now enforces that `record` and `auto` modes must be configured with a `live_responder`, providing fail-fast validation for deterministic workflows.
